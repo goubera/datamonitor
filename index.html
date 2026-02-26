@@ -3,513 +3,1098 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🇬🇳 Guinée Monitor — Tableau de Bord National</title>
+<title>🇬🇳 Guinée Monitor v2.0</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&family=Saira+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #060a13;
-  --bg2: #0c1220;
-  --panel: #0e1726;
-  --card: #121f35;
-  --hover: #182540;
-  --gold: #e8b84b;
-  --red: #e84b4b;
-  --green: #4be885;
-  --blue: #4b8be8;
-  --cyan: #4be8c5;
-  --orange: #e87b4b;
-  --purple: #9b4be8;
-  --pink: #e84b9b;
-  --fire: #ff6b35;
-  --txt: #dde4f0;
-  --txt2: #7a8fa8;
-  --txt3: #3a4a5a;
-  --border: rgba(232,184,75,0.12);
-  --border2: rgba(232,184,75,0.28);
+:root{
+  --bg:#060a13;--bg2:#0c1220;--panel:#0e1726;--card:#121f35;--hover:#182540;
+  --gold:#e8b84b;--red:#e84b4b;--green:#4be885;--blue:#4b8be8;--cyan:#4be8c5;
+  --orange:#e87b4b;--purple:#9b4be8;--pink:#e84b9b;--fire:#ff6b35;
+  --txt:#dde4f0;--txt2:#7a8fa8;--txt3:#3a4a5a;
+  --border:rgba(232,184,75,.12);--border2:rgba(232,184,75,.28);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{height:100%;overflow:hidden}
-body{
-  font-family:'Rajdhani',sans-serif;
-  background:var(--bg);
-  color:var(--txt);
-  display:flex;flex-direction:column;
-}
+html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--txt)}
 
-/* ── HEADER ── */
-#hdr{
-  height:52px;background:var(--bg2);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 14px;gap:14px;
-  flex-shrink:0;z-index:1000;position:relative;
-}
-.logo{display:flex;align-items:center;gap:9px}
-.flag{display:flex;width:28px;height:19px;border-radius:2px;overflow:hidden;flex-shrink:0}
+/* HEADER */
+#hdr{height:50px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:12px;flex-shrink:0;z-index:1000;position:relative}
+.flag{display:flex;width:26px;height:17px;border-radius:2px;overflow:hidden;flex-shrink:0}
 .flag span{flex:1}
-.logo-txt{font-family:'Saira Condensed',sans-serif;font-size:19px;font-weight:700;letter-spacing:2px}
+.logo-txt{font-family:'Saira Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:2px}
 .logo-txt em{color:var(--gold);font-style:normal}
-.divider{width:1px;height:28px;background:var(--border)}
+.v2badge{background:rgba(232,184,75,.15);border:1px solid rgba(232,184,75,.3);color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:8px;padding:2px 5px;border-radius:2px;letter-spacing:1px}
+.div{width:1px;height:26px;background:var(--border)}
 .live{display:flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--green)}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.75)}}
-.chips{display:flex;gap:8px;flex:1;overflow:hidden}
-.chip{
-  display:flex;align-items:center;gap:6px;
-  background:var(--card);border:1px solid var(--border);border-radius:3px;
-  padding:3px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;
-  white-space:nowrap;flex-shrink:0;
-}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.chips{display:flex;gap:6px;flex:1;overflow:hidden}
+.chip{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:3px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;white-space:nowrap;flex-shrink:0;cursor:default}
 .cl{color:var(--txt3);font-size:9px;text-transform:uppercase;letter-spacing:.8px}
 .cv{color:var(--gold);font-weight:500}
-.cup{color:var(--green)}
-.cdn{color:var(--red)}
-#clock{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--txt2);margin-left:auto;flex-shrink:0}
+.cup{color:var(--green);font-size:9px}
+.cdn{color:var(--red);font-size:9px}
+#clock{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--txt2);margin-left:auto;flex-shrink:0}
+.hdr-btn{background:rgba(75,139,232,.12);border:1px solid rgba(75,139,232,.3);color:var(--blue);font-family:'Saira Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px;padding:4px 10px;border-radius:3px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
+.hdr-btn:hover{background:rgba(75,139,232,.25)}
+.hdr-btn.cam{background:rgba(232,75,75,.1);border-color:rgba(232,75,75,.3);color:var(--red)}
+.hdr-btn.cam:hover{background:rgba(232,75,75,.22)}
 
-/* ── MAIN ── */
-#main{flex:1;display:flex;overflow:hidden}
+/* MAIN */
+#main{flex:1;display:flex;overflow:hidden;height:calc(100vh - 50px)}
 
-/* ── SIDEBAR ── */
-#sb{
-  width:248px;background:var(--panel);
-  border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;z-index:100;
-}
-.ss{border-bottom:1px solid var(--border);padding:10px 12px}
-.st{font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:1.8px;color:var(--txt3);text-transform:uppercase;margin-bottom:8px}
-.lt{
-  display:flex;align-items:center;gap:9px;padding:6px 7px;
-  border-radius:3px;cursor:pointer;transition:background .15s;margin-bottom:1px;
-}
+/* SIDEBAR */
+#sb{width:236px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0;z-index:100}
+.ss{border-bottom:1px solid var(--border);padding:9px 11px}
+.st{font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:1.8px;color:var(--txt3);text-transform:uppercase;margin-bottom:7px}
+.lt{display:flex;align-items:center;gap:8px;padding:5px 6px;border-radius:3px;cursor:pointer;transition:background .15s;margin-bottom:1px}
 .lt:hover{background:var(--hover)}
-.lt.on{background:rgba(232,184,75,.07)}
-.ldot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
-.ln{font-size:13px;color:var(--txt2);flex:1}
+.lt.on{background:rgba(232,184,75,.06)}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.ln{font-size:12px;color:var(--txt2);flex:1}
 .lt.on .ln{color:var(--txt)}
-.lc{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--txt3);background:var(--card);padding:1px 5px;border-radius:2px}
-.sw{width:26px;height:14px;background:var(--card);border-radius:7px;position:relative;flex-shrink:0;transition:background .2s}
-.sw::after{content:'';position:absolute;width:10px;height:10px;border-radius:50%;background:var(--txt3);top:2px;left:2px;transition:all .2s}
-.lt.on .sw{background:rgba(232,184,75,.25)}
-.lt.on .sw::after{background:var(--gold);left:14px}
+.lc{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--txt3);background:var(--card);padding:1px 4px;border-radius:2px}
+.sw{width:24px;height:13px;background:var(--card);border-radius:7px;position:relative;flex-shrink:0;transition:background .2s}
+.sw::after{content:'';position:absolute;width:9px;height:9px;border-radius:50%;background:var(--txt3);top:2px;left:2px;transition:all .2s}
+.lt.on .sw{background:rgba(232,184,75,.2)}
+.lt.on .sw::after{background:var(--gold);left:13px}
+
+/* ECON BARS */
 .rbar{display:flex;flex-direction:column;gap:3px}
-.rr{display:flex;align-items:center;gap:7px}
-.rn{font-size:11px;color:var(--txt2);width:85px;flex-shrink:0}
+.rr{display:flex;align-items:center;gap:6px}
+.rn{font-size:10px;color:var(--txt2);width:78px;flex-shrink:0}
 .rb{flex:1;height:3px;background:var(--card);border-radius:2px;overflow:hidden}
-.rf{height:100%;border-radius:2px}
-.rv{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--txt3);width:42px;text-align:right}
-.coms{display:flex;flex-direction:column;gap:3px}
-.com{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:7px 9px;display:flex;align-items:center;justify-content:space-between}
-.cn2{font-size:10px;color:var(--txt3);letter-spacing:.5px}
-.cp{font-family:'IBM Plex Mono',monospace;font-size:14px;color:var(--gold)}
-.cc{font-family:'IBM Plex Mono',monospace;font-size:10px}
-.dsr{display:flex;justify-content:space-between;padding:2px 0;font-size:11px}
+.rf{height:100%;border-radius:2px;transition:width 1s ease}
+.rv{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--txt3);width:38px;text-align:right}
+
+/* COMMODITY */
+.coms{display:flex;flex-direction:column;gap:2px}
+.com{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:6px 8px;display:flex;align-items:center;justify-content:space-between}
+.cn2{font-size:9px;color:var(--txt3);letter-spacing:.5px;text-transform:uppercase}
+.cp{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--gold)}
+.cc{font-family:'IBM Plex Mono',monospace;font-size:9px}
+
+/* STATUS */
+.dsr{display:flex;justify-content:space-between;padding:2px 0;font-size:10px;border-bottom:1px solid rgba(255,255,255,.03)}
 .dst{color:var(--txt2)}
-.dsl{font-family:'IBM Plex Mono',monospace;font-size:9px}
+.dsl{font-family:'IBM Plex Mono',monospace;font-size:8px}
 
-/* ── MAP ── */
-#mc{flex:1;position:relative}
+/* MAP */
+#mc{flex:1;position:relative;overflow:hidden}
 #map{width:100%;height:100%}
-.leaflet-container{background:#06090f!important}
-.leaflet-popup-content-wrapper{background:var(--panel)!important;border:1px solid var(--border2)!important;border-radius:4px!important;box-shadow:0 4px 24px rgba(0,0,0,.6)!important;color:var(--txt)!important;font-family:'Rajdhani',sans-serif!important}
-.leaflet-popup-tip{background:var(--panel)!important}
-.leaflet-popup-content{margin:12px 15px!important;min-width:200px}
-.pt{font-family:'Saira Condensed',sans-serif;font-size:16px;font-weight:700;color:var(--gold);margin-bottom:8px;line-height:1.2}
-.pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:13px}
-.pr:last-child{border-bottom:none}
-.pk{color:var(--txt2)}
-.pv{color:var(--txt);font-weight:500;text-align:right;max-width:60%}
-.mow{position:absolute;bottom:36px;left:12px;z-index:500;display:flex;flex-direction:column;gap:5px;pointer-events:none}
-.mpill{
-  background:rgba(6,9,15,.88);border:1px solid var(--border);border-radius:3px;
-  padding:4px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;
-  display:flex;align-items:center;gap:7px;backdrop-filter:blur(6px);
-}
+.leaflet-container{background:#060a10!important}
 
-/* ── RIGHT PANEL ── */
-#rp{
-  width:292px;background:var(--panel);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;
-}
-.tabs{display:flex;border-bottom:1px solid var(--border)}
-.tab{
-  flex:1;padding:9px 4px;text-align:center;font-size:11px;letter-spacing:1px;
-  color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;
-  font-family:'Saira Condensed',sans-serif;font-weight:600;
-}
+/* POPUP */
+.leaflet-popup-content-wrapper{background:var(--panel)!important;border:1px solid var(--border2)!important;border-radius:4px!important;box-shadow:0 4px 30px rgba(0,0,0,.7)!important;color:var(--txt)!important;font-family:'Rajdhani',sans-serif!important}
+.leaflet-popup-tip{background:var(--panel)!important}
+.leaflet-popup-content{margin:11px 14px!important;min-width:190px;max-width:280px}
+.pt{font-family:'Saira Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--gold);margin-bottom:7px;line-height:1.2}
+.pr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:12px}
+.pr:last-child{border-bottom:none}
+.pk{color:var(--txt2);flex-shrink:0;margin-right:8px}
+.pv{color:var(--txt);font-weight:500;text-align:right;flex:1}
+.ptag{display:inline-block;padding:2px 6px;border-radius:2px;font-size:9px;font-weight:700;letter-spacing:.8px;margin-bottom:6px;margin-right:3px}
+
+/* MAP OVERLAYS */
+.mow{position:absolute;bottom:32px;left:10px;z-index:500;display:flex;flex-direction:column;gap:4px;pointer-events:none}
+.mpill{background:rgba(6,9,15,.9);border:1px solid var(--border);border-radius:3px;padding:3px 8px;font-family:'IBM Plex Mono',monospace;font-size:9px;display:flex;align-items:center;gap:6px;backdrop-filter:blur(5px)}
+
+/* RIGHT PANEL */
+#rp{width:288px;background:var(--panel);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.tabs{display:flex;border-bottom:1px solid var(--border);overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:8px 10px;text-align:center;font-size:10px;letter-spacing:1px;color:var(--txt2);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;font-family:'Saira Condensed',sans-serif;font-weight:600}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold)}
-.pc{flex:1;overflow-y:auto;padding:7px}
-.ni{
-  background:var(--card);border:1px solid var(--border);border-radius:3px;
-  padding:9px 10px;margin-bottom:5px;cursor:pointer;transition:all .15s;
-}
+.pc{flex:1;overflow-y:auto;padding:6px;display:none}
+.pc.on{display:block}
+
+/* NEWS */
+.ni{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:8px 9px;margin-bottom:4px;cursor:pointer;transition:all .15s}
 .ni:hover{border-color:var(--border2);background:var(--hover)}
-.ns{display:inline-block;padding:1px 6px;border-radius:2px;font-size:9px;font-weight:700;letter-spacing:.8px;margin-bottom:5px}
+.ns{display:inline-block;padding:1px 5px;border-radius:2px;font-size:8px;font-weight:700;letter-spacing:.8px;margin-bottom:4px}
 .sc{background:rgba(232,75,75,.18);color:var(--red)}
 .sh{background:rgba(232,123,75,.18);color:var(--orange)}
 .sm{background:rgba(232,184,75,.18);color:var(--gold)}
 .sl{background:rgba(75,139,232,.18);color:var(--blue)}
 .si{background:rgba(75,232,133,.18);color:var(--green)}
-.nt{font-size:12px;line-height:1.4;margin-bottom:5px;color:var(--txt)}
-.nm{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--txt3);display:flex;gap:8px}
+.nt{font-size:11px;line-height:1.4;margin-bottom:4px}
+.nm{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--txt3);display:flex;gap:6px}
 .nsrc{color:var(--blue)}
-.sc2{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:10px 12px;margin-bottom:5px}
-.sc2t{font-size:10px;letter-spacing:.8px;color:var(--txt3);text-transform:uppercase;margin-bottom:6px}
-.sc2v{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:500;color:var(--gold)}
-.sc2s{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--txt2);margin-top:3px}
 
+/* STATS */
+.sc2{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:9px 11px;margin-bottom:4px}
+.sc2t{font-size:9px;letter-spacing:.8px;color:var(--txt3);text-transform:uppercase;margin-bottom:4px}
+.sc2v{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:500;color:var(--gold)}
+.sc2s{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--txt2);margin-top:2px;line-height:1.4}
+.sc2g{display:flex;gap:3px;margin-top:4px;align-items:flex-end;height:32px}
+.bar{flex:1;background:rgba(232,184,75,.18);border-radius:1px 1px 0 0;min-width:2px;transition:height .5s ease}
+.sec-title{font-family:'Saira Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:1.5px;color:var(--txt3);text-transform:uppercase;padding:8px 0 5px;border-bottom:1px solid var(--border);margin-bottom:6px}
+
+/* PROJECTS */
+.proj{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:8px 10px;margin-bottom:4px}
+.proj-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:5px}
+.proj-name{font-size:12px;font-weight:600;color:var(--txt);line-height:1.3;flex:1}
+.proj-badge{padding:2px 6px;border-radius:2px;font-size:8px;font-weight:700;letter-spacing:.8px;flex-shrink:0;margin-left:5px}
+.bact{background:rgba(75,232,133,.15);color:var(--green)}
+.bcon{background:rgba(232,184,75,.15);color:var(--gold)}
+.bpla{background:rgba(75,139,232,.15);color:var(--blue)}
+.bsus{background:rgba(232,75,75,.15);color:var(--red)}
+.proj-row{display:flex;justify-content:space-between;font-size:10px;padding:1px 0}
+.proj-k{color:var(--txt3)}
+.proj-v{color:var(--txt2);text-align:right;flex:1;margin-left:6px}
+.prog-bar{height:3px;background:var(--bg);border-radius:2px;margin-top:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;transition:width 1s ease}
+
+/* VIDEO MODAL */
+#vid-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(3,6,12,.95);backdrop-filter:blur(8px);flex-direction:column}
+#vid-overlay.open{display:flex}
+#vid-hdr{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:12px;flex-shrink:0}
+#vid-close{margin-left:auto;background:rgba(232,75,75,.15);border:1px solid rgba(232,75,75,.35);color:var(--red);font-size:12px;padding:5px 14px;border-radius:3px;cursor:pointer;font-family:'IBM Plex Mono',monospace}
+#vid-close:hover{background:rgba(232,75,75,.28)}
+#vid-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:14px}
+.vs{font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;color:var(--txt3);text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--border)}
+.vgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:10px}
+.vcard{background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.vcard:hover{border-color:var(--border2)}
+.vcard-hdr{display:flex;align-items:center;gap:8px;padding:7px 11px;background:var(--panel);border-bottom:1px solid var(--border)}
+.vbadge{padding:2px 6px;border-radius:2px;font-size:8px;font-weight:700;letter-spacing:1px;flex-shrink:0}
+.vlive{background:rgba(232,75,75,.2);color:var(--red)}
+.vcam{background:rgba(75,197,232,.2);color:var(--cyan)}
+.vweb{background:rgba(75,232,133,.2);color:var(--green)}
+.vname{font-size:12px;font-weight:600;color:var(--txt);flex:1}
+.vsub{font-size:9px;color:var(--txt2)}
+.vframe{width:100%;aspect-ratio:16/9;border:none;background:#000;display:block}
+.vcam-ph{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#0a1220,#0e1a2e);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:var(--txt3)}
+.vcam-ph .ico{font-size:28px;opacity:.4}
+.vcam-ph .msg{font-size:10px;text-align:center;line-height:1.5;max-width:220px}
+.vcam-ph .loc{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--blue);opacity:.6}
+.search-cam{display:flex;gap:8px;margin-bottom:10px}
+.search-cam input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:7px 10px;color:var(--txt);font-family:'Rajdhani',sans-serif;font-size:13px;outline:none}
+.search-cam input:focus{border-color:var(--border2)}
+.search-cam button{background:rgba(232,184,75,.15);border:1px solid var(--border);color:var(--gold);padding:7px 14px;border-radius:3px;cursor:pointer;font-family:'Saira Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:1px}
+.search-cam button:hover{background:rgba(232,184,75,.25)}
+
+/* REGION MODAL */
+#reg-overlay{display:none;position:fixed;inset:0;z-index:1500;background:rgba(3,6,12,.92);backdrop-filter:blur(6px);align-items:center;justify-content:center}
+#reg-overlay.open{display:flex}
+#reg-modal{background:var(--panel);border:1px solid var(--border2);border-radius:6px;width:780px;max-width:95vw;max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+#reg-modal-hdr{background:var(--bg2);border-bottom:1px solid var(--border);padding:14px 18px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+#reg-modal-title{font-family:'Saira Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--gold);letter-spacing:2px}
+#reg-modal-sub{font-size:13px;color:var(--txt2);margin-top:2px}
+#reg-close{margin-left:auto;background:rgba(232,75,75,.12);border:1px solid rgba(232,75,75,.3);color:var(--red);padding:5px 14px;border-radius:3px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:11px}
+#reg-body{overflow-y:auto;padding:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rmod-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:12px 14px}
+.rmod-t{font-size:9px;letter-spacing:1.5px;color:var(--txt3);text-transform:uppercase;margin-bottom:8px}
+.rmod-row{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.03)}
+.rmod-k{color:var(--txt2)}
+.rmod-v{color:var(--txt);font-weight:500;text-align:right}
+.rmod-full{grid-column:1/-1}
+
+/* SCROLLBAR */
 ::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
-.shimmer{background:linear-gradient(90deg,var(--card) 25%,var(--hover) 50%,var(--card) 75%);background-size:200% 100%;animation:sh 1.4s infinite;border-radius:3px;height:11px}
+.shimmer{background:linear-gradient(90deg,var(--card) 25%,var(--hover) 50%,var(--card) 75%);background-size:200% 100%;animation:sh 1.4s infinite;border-radius:3px;height:10px}
 @keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
 </style>
 </head>
 <body>
 
+<!-- HEADER -->
 <header id="hdr">
-  <div class="logo">
-    <div class="flag"><span style="background:#CE1126"></span><span style="background:#FCD116"></span><span style="background:#009460"></span></div>
-    <div class="logo-txt">GUINÉE <em>MONITOR</em></div>
-  </div>
-  <div class="divider"></div>
+  <div class="flag"><span style="background:#CE1126"></span><span style="background:#FCD116"></span><span style="background:#009460"></span></div>
+  <div class="logo-txt">GUINÉE <em>MONITOR</em></div>
+  <div class="v2badge">v2.0</div>
+  <div class="div"></div>
   <div class="live"><div class="dot"></div>LIVE</div>
   <div class="chips">
-    <div class="chip"><span class="cl">GNF/USD</span><span class="cv" id="gnf">—</span></div>
-    <div class="chip"><span class="cl">Bauxite</span><span class="cv">~$35/t</span><span class="cup">+0.8%</span></div>
-    <div class="chip"><span class="cl">Or (XAU)</span><span class="cv" id="gold-hdr">—</span></div>
-    <div class="chip"><span class="cl">🌡 Conakry</span><span class="cv" id="wth-hdr">—</span></div>
-    <div class="chip"><span class="cl">Alertes</span><span style="color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500" id="alert-count">—</span></div>
+    <div class="chip"><span class="cl">GNF/USD</span><span class="cv" id="h-gnf">…</span></div>
+    <div class="chip"><span class="cl">EUR/GNF</span><span class="cv" id="h-eur">…</span></div>
+    <div class="chip"><span class="cl">Bauxite</span><span class="cv">~$35/t</span><span class="cup">▲0.8%</span></div>
+    <div class="chip"><span class="cl">Or XAU</span><span class="cv" id="h-gold">…</span><span id="h-gold-c" class="cup">…</span></div>
+    <div class="chip"><span class="cl">🌡 Conakry</span><span class="cv" id="h-wth">…</span></div>
+    <div class="chip"><span class="cl">⚠ Alertes</span><span style="color:var(--red);font-family:'IBM Plex Mono',monospace;font-size:10px" id="h-alerts">…</span></div>
   </div>
+  <button class="hdr-btn cam" onclick="openVid()">📷 CAMÉRAS / MÉDIAS</button>
   <div id="clock">--:--:-- UTC</div>
 </header>
 
 <div id="main">
+<!-- SIDEBAR -->
+<div id="sb">
 
-  <!-- SIDEBAR -->
-  <div id="sb">
-    <div class="ss">
-      <div class="st">Couches carte</div>
+  <div class="ss">
+    <div class="st">Couches carte</div>
+    <div class="lt on" id="l-regions"    onclick="tgl('regions',this)"><div class="ldot" style="background:#4b8be8"></div><span class="ln">Régions / Préfectures</span><div class="sw"></div></div>
+    <div class="lt on" id="l-routes"     onclick="tgl('routes',this)"><div class="ldot" style="background:#e8b84b"></div><span class="ln">Routes nationales</span><span class="lc">8</span><div class="sw"></div></div>
+    <div class="lt on" id="l-mining"     onclick="tgl('mining',this)"><div class="ldot" style="background:#ffd700"></div><span class="ln">Sites miniers</span><span class="lc">15</span><div class="sw"></div></div>
+    <div class="lt on" id="l-dams"       onclick="tgl('dams',this)"><div class="ldot" style="background:#4be885"></div><span class="ln">Barrages / Énergie</span><span class="lc">5</span><div class="sw"></div></div>
+    <div class="lt on" id="l-tourism"    onclick="tgl('tourism',this)"><div class="ldot" style="background:#e84b9b"></div><span class="ln">Sites touristiques</span><span class="lc">22</span><div class="sw"></div></div>
+    <div class="lt on" id="l-agri"       onclick="tgl('agri',this)"><div class="ldot" style="background:#80d44b"></div><span class="ln">Projets agricoles</span><span class="lc">8</span><div class="sw"></div></div>
+    <div class="lt on" id="l-industry"   onclick="tgl('industry',this)"><div class="ldot" style="background:#aaaaaa"></div><span class="ln">Sites industriels</span><span class="lc">7</span><div class="sw"></div></div>
+    <div class="lt on" id="l-military"   onclick="tgl('military',this)"><div class="ldot" style="background:#e84b4b"></div><span class="ln">Installations mil.</span><span class="lc">6</span><div class="sw"></div></div>
+    <div class="lt on" id="l-incidents"  onclick="tgl('incidents',this)"><div class="ldot" style="background:#e87b4b"></div><span class="ln">Incidents sécurité</span><span class="lc">6</span><div class="sw"></div></div>
+    <div class="lt on" id="l-health"     onclick="tgl('health',this)"><div class="ldot" style="background:#e84b9b"></div><span class="ln">Santé / Épidémies</span><span class="lc">5</span><div class="sw"></div></div>
+    <div class="lt on" id="l-weather"    onclick="tgl('weather',this)"><div class="ldot" style="background:#4be8c5"></div><span class="ln">Météo villes</span><span class="lc">8</span><div class="sw"></div></div>
+    <div class="lt on" id="l-fires"      onclick="tgl('fires',this)"><div class="ldot" style="background:#ff6b35"></div><span class="ln">Feux NASA FIRMS</span><div class="sw"></div></div>
+    <div class="lt on" id="l-population" onclick="tgl('population',this)"><div class="ldot" style="background:#9b4be8"></div><span class="ln">Population</span><div class="sw"></div></div>
+    <div class="lt on" id="l-port"       onclick="tgl('port',this)"><div class="ldot" style="background:#4be8c5"></div><span class="ln">Port de Conakry</span><div class="sw"></div></div>
+    <div class="lt"    id="l-floods"     onclick="tgl('floods',this)"><div class="ldot" style="background:#4b6be8"></div><span class="ln">Risques hydro.</span><div class="sw"></div></div>
+    <div class="lt"    id="l-cameras"    onclick="tgl('cameras',this)"><div class="ldot" style="background:#e84b4b"></div><span class="ln">Empl. caméras</span><span class="lc">12</span><div class="sw"></div></div>
+  </div>
 
-      <div class="lt on" onclick="tgl('regions',this)"><div class="ldot" style="background:var(--blue)"></div><span class="ln">Régions admin.</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('mining',this)"><div class="ldot" style="background:var(--gold)"></div><span class="ln">Projets miniers</span><span class="lc">12</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('dams',this)"><div class="ldot" style="background:var(--green)"></div><span class="ln">Barrages / Énergie</span><span class="lc">5</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('weather',this)"><div class="ldot" style="background:var(--cyan)"></div><span class="ln">Météo (villes)</span><span class="lc">8</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('military',this)"><div class="ldot" style="background:var(--red)"></div><span class="ln">Installations mil.</span><span class="lc">6</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('incidents',this)"><div class="ldot" style="background:var(--orange)"></div><span class="ln">Incidents sécurité</span><span class="lc">5</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('population',this)"><div class="ldot" style="background:var(--purple)"></div><span class="ln">Population</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('fires',this)"><div class="ldot" style="background:var(--fire)"></div><span class="ln">Incendies NASA FIRMS</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('health',this)"><div class="ldot" style="background:var(--pink)"></div><span class="ln">Santé / Épidémies</span><span class="lc">5</span><div class="sw"></div></div>
-      <div class="lt on" onclick="tgl('port',this)"><div class="ldot" style="background:var(--cyan)"></div><span class="ln">Port de Conakry</span><div class="sw"></div></div>
-      <div class="lt" onclick="tgl('floods',this)"><div class="ldot" style="background:#4b6be8"></div><span class="ln">Risques hydro.</span><div class="sw"></div></div>
-    </div>
-
-    <div class="ss">
-      <div class="st">Économie régionale</div>
-      <div class="rbar">
-        <div class="rr"><span class="rn">Boké</span><div class="rb"><div class="rf" style="width:93%;background:var(--gold)"></div></div><span class="rv">Bauxite</span></div>
-        <div class="rr"><span class="rn">Conakry</span><div class="rb"><div class="rf" style="width:88%;background:var(--blue)"></div></div><span class="rv">Commerce</span></div>
-        <div class="rr"><span class="rn">Kankan</span><div class="rb"><div class="rf" style="width:72%;background:#c8a840)"></div></div><span class="rv" style="background:none">Or/Agri</span></div>
-        <div class="rr"><span class="rn">N'Zérékoré</span><div class="rb"><div class="rf" style="width:58%;background:var(--green)"></div></div><span class="rv">Forêt/Fer</span></div>
-        <div class="rr"><span class="rn">Labé</span><div class="rb"><div class="rf" style="width:45%;background:var(--purple)"></div></div><span class="rv">Élevage</span></div>
-        <div class="rr"><span class="rn">Faranah</span><div class="rb"><div class="rf" style="width:38%;background:var(--cyan)"></div></div><span class="rv">Agric.</span></div>
-      </div>
-    </div>
-
-    <div class="ss">
-      <div class="st">Matières premières</div>
-      <div class="coms">
-        <div class="com"><div><div class="cn2">BAUXITE (t)</div><div class="cp">~$35</div></div><div class="cc cup">+0.8%</div></div>
-        <div class="com"><div><div class="cn2">OR (oz)</div><div class="cp" id="gold-sb">—</div></div><div class="cc" id="gold-chg-sb" style="color:var(--txt3)">...</div></div>
-        <div class="com"><div><div class="cn2">FER (t)</div><div class="cp">~$108</div></div><div class="cc cdn">-1.2%</div></div>
-        <div class="com"><div><div class="cn2">DIAMANT (ct)</div><div class="cp">~$1200</div></div><div class="cc" style="color:var(--txt3)">stable</div></div>
-        <div class="com"><div><div class="cn2">ALUMINE (t)</div><div class="cp">~$310</div></div><div class="cc cup">+0.3%</div></div>
-      </div>
-    </div>
-
-    <div class="ss">
-      <div class="st">Statut des données</div>
-      <div class="dsr"><span class="dst">Météo (Open-Meteo)</span><span class="dsl" style="color:var(--green)">● LIVE</span></div>
-      <div class="dsr"><span class="dst">Taux de change</span><span class="dsl" style="color:var(--green)">● LIVE</span></div>
-      <div class="dsr"><span class="dst">Données minières</span><span class="dsl" style="color:var(--gold)">◑ VÉRIFIÉES</span></div>
-      <div class="dsr"><span class="dst">Barrages (EDG)</span><span class="dsl" style="color:var(--gold)">◑ VÉRIFIÉES</span></div>
-      <div class="dsr"><span class="dst">NASA FIRMS feux</span><span class="dsl" style="color:var(--gold)">◑ 24H</span></div>
-      <div class="dsr"><span class="dst">ACLED sécurité</span><span class="dsl" style="color:var(--gold)">◑ HEBDO</span></div>
-      <div class="dsr"><span class="dst">Armée (sources ouv.)</span><span class="dsl" style="color:var(--orange)">○ STATIQUE</span></div>
+  <div class="ss">
+    <div class="st">Économie régionale</div>
+    <div class="rbar">
+      <div class="rr"><span class="rn">Boké</span><div class="rb"><div class="rf" style="width:96%;background:var(--gold)"></div></div><span class="rv" style="color:var(--gold)">Bauxite</span></div>
+      <div class="rr"><span class="rn">Conakry</span><div class="rb"><div class="rf" style="width:88%;background:var(--blue)"></div></div><span class="rv" style="color:var(--blue)">Commerce</span></div>
+      <div class="rr"><span class="rn">Kankan</span><div class="rb"><div class="rf" style="width:74%;background:#ffd700"></div></div><span class="rv" style="color:#ffd700">Or/Agri</span></div>
+      <div class="rr"><span class="rn">N'Zérékoré</span><div class="rb"><div class="rf" style="width:60%;background:var(--green)"></div></div><span class="rv" style="color:var(--green)">Fer/Forêt</span></div>
+      <div class="rr"><span class="rn">Labé</span><div class="rb"><div class="rf" style="width:46%;background:var(--purple)"></div></div><span class="rv" style="color:var(--purple)">Élevage</span></div>
+      <div class="rr"><span class="rn">Faranah</span><div class="rb"><div class="rf" style="width:38%;background:var(--cyan)"></div></div><span class="rv" style="color:var(--cyan)">Agric.</span></div>
+      <div class="rr"><span class="rn">Kindia</span><div class="rb"><div class="rf" style="width:52%;background:var(--orange)"></div></div><span class="rv" style="color:var(--orange)">Mix</span></div>
+      <div class="rr"><span class="rn">Mamou</span><div class="rb"><div class="rf" style="width:33%;background:var(--pink)"></div></div><span class="rv" style="color:var(--pink)">Transit</span></div>
     </div>
   </div>
 
-  <!-- MAP -->
-  <div id="mc">
-    <div id="map"></div>
-    <div class="mow" id="mow"></div>
+  <div class="ss">
+    <div class="st">Matières premières</div>
+    <div class="coms">
+      <div class="com"><div><div class="cn2">BAUXITE (t)</div><div class="cp">~$35</div></div><div class="cc cup">▲0.8%</div></div>
+      <div class="com"><div><div class="cn2">OR (oz)</div><div class="cp" id="sb-gold">…</div></div><div class="cc" id="sb-gold-c" style="color:var(--txt3)">…</div></div>
+      <div class="com"><div><div class="cn2">FER (t)</div><div class="cp">~$108</div></div><div class="cc cdn">▼1.2%</div></div>
+      <div class="com"><div><div class="cn2">ALUMINE (t)</div><div class="cp">~$310</div></div><div class="cc cup">▲0.3%</div></div>
+      <div class="com"><div><div class="cn2">DIAMANT (ct)</div><div class="cp">~$1,200</div></div><div class="cc" style="color:var(--txt3)">stable</div></div>
+    </div>
   </div>
 
-  <!-- RIGHT PANEL -->
-  <div id="rp">
-    <div class="tabs">
-      <div class="tab on" onclick="stab('news',this)">ACTUALITÉS</div>
-      <div class="tab" onclick="stab('stats',this)">STATS</div>
-      <div class="tab" onclick="stab('alerts',this)">ALERTES</div>
+  <div class="ss">
+    <div class="st">Statut données</div>
+    <div class="dsr"><span class="dst">Météo (Open-Meteo)</span><span class="dsl" style="color:var(--green)">● LIVE</span></div>
+    <div class="dsr"><span class="dst">Taux de change</span><span class="dsl" style="color:var(--green)">● LIVE</span></div>
+    <div class="dsr"><span class="dst">Banque Mondiale</span><span class="dsl" style="color:var(--green)">● API</span></div>
+    <div class="dsr"><span class="dst">Miniers (ITIE)</span><span class="dsl" style="color:var(--gold)">◑ VÉRIF.</span></div>
+    <div class="dsr"><span class="dst">NASA FIRMS</span><span class="dsl" style="color:var(--gold)">◑ 24H</span></div>
+    <div class="dsr"><span class="dst">ACLED sécurité</span><span class="dsl" style="color:var(--gold)">◑ HEBDO</span></div>
+    <div class="dsr"><span class="dst">OSM Routes</span><span class="dsl" style="color:var(--gold)">◑ MENSUEL</span></div>
+    <div class="dsr"><span class="dst">Tourisme</span><span class="dsl" style="color:var(--gold)">◑ STATIQUE</span></div>
+    <div class="dsr"><span class="dst">Militaire</span><span class="dsl" style="color:var(--orange)">○ STATIQUE</span></div>
+    <div style="margin-top:5px;font-size:9px;color:var(--txt3);font-family:'IBM Plex Mono',monospace">
+      Dernière MAJ: <span id="last-update">…</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAP -->
+<div id="mc">
+  <div id="map"></div>
+  <div class="mow" id="mow"></div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div id="rp">
+  <div class="tabs">
+    <div class="tab on"  onclick="stab('news',this)">ACTUS</div>
+    <div class="tab"     onclick="stab('stats',this)">STATS</div>
+    <div class="tab"     onclick="stab('projects',this)">PROJETS</div>
+    <div class="tab"     onclick="stab('alerts',this)">ALERTES</div>
+    <div class="tab"     onclick="stab('wb',this)">INDICATEURS</div>
+  </div>
+
+  <!-- NEWS -->
+  <div class="pc on" id="tab-news">
+    <div id="nfeed"><div style="padding:12px;text-align:center"><div class="shimmer" style="margin-bottom:5px"></div><div class="shimmer" style="width:80%;margin-bottom:5px"></div><div style="font-size:11px;color:var(--txt2);margin-top:8px">Chargement…</div></div></div>
+  </div>
+
+  <!-- STATS -->
+  <div class="pc" id="tab-stats">
+    <div class="sec-title">DÉMOGRAPHIE</div>
+    <div class="sc2"><div class="sc2t">Population totale (2024 est.)</div><div class="sc2v">14.1 Million</div><div class="sc2s">Densité 57 hab/km² · Superficie 245,857 km²</div></div>
+    <div class="sc2"><div class="sc2t">Population urbaine</div><div class="sc2v">38.2%</div><div class="sc2s">Conakry ~2.5M · Taux d'urbanisation +5%/an</div></div>
+    <div class="sc2"><div class="sc2t">Âge médian</div><div class="sc2v">18.6 ans</div><div class="sc2s">65% de la population a moins de 25 ans</div></div>
+    <div class="sc2"><div class="sc2t">Croissance démogr.</div><div class="sc2v">+2.8%/an</div><div class="sc2s">Taux de natalité 38.4‰ · Mortalité 8.9‰</div></div>
+    <div class="sc2"><div class="sc2t">Groupes ethniques</div><div class="sc2v">24 ethnies</div><div class="sc2s">Peul 33% · Malinké 29% · Soussou 21% · autres 17%</div></div>
+
+    <div class="sec-title">ÉCONOMIE</div>
+    <div class="sc2"><div class="sc2t">PIB nominal (2023)</div><div class="sc2v">$9.2 Milliards</div><div class="sc2s">Croissance +5.6% · PIB/habitant ~$652 USD</div></div>
+    <div class="sc2"><div class="sc2t">Inflation (2024)</div><div class="sc2v">~11.8%</div><div class="sc2s">Source: FMI/Banque Mondiale</div></div>
+    <div class="sc2"><div class="sc2t">Chômage</div><div class="sc2v">~5.6%</div><div class="sc2s">Sous-emploi estimé à ~35% (secteur informel)</div></div>
+    <div class="sc2"><div class="sc2t">Dette ext. / PIB</div><div class="sc2v">~78%</div><div class="sc2s">Allègement PPTE complété · Chine créancier principal</div></div>
+    <div class="sc2"><div class="sc2t">Exportations (2023)</div><div class="sc2v">~$4.2 Mrd</div><div class="sc2s">Bauxite 80% · Or 12% · Diamants · Alumine</div></div>
+
+    <div class="sec-title">SECTEUR MINIER</div>
+    <div class="sc2"><div class="sc2t">Production bauxite</div><div class="sc2v">~90 Mt/an</div><div class="sc2s">🥇 1ᵉʳ producteur mondial · 2/3 des réserves mondiales</div></div>
+    <div class="sc2"><div class="sc2t">Réserves bauxite</div><div class="sc2v">25 Gt</div><div class="sc2s">Boké, Kindia, Fria, Télimélé, Dalaba</div></div>
+    <div class="sc2"><div class="sc2t">Simandou (fer)</div><div class="sc2v">2.4 Gt</div><div class="sc2s">Teneur 65%+ · Production cible 60 Mt/an · Livraison 2026</div></div>
+    <div class="sc2"><div class="sc2t">Production or</div><div class="sc2v">~25 t/an</div><div class="sc2s">Siguiri (AngloGold) · Léro (Nordgold) · Mandiana</div></div>
+    <div class="sc2"><div class="sc2t">Revenus miniers/PIB</div><div class="sc2v">~22%</div><div class="sc2s">Source: ITIE Guinée 2023</div></div>
+
+    <div class="sec-title">ÉNERGIE & INFRA</div>
+    <div class="sc2"><div class="sc2t">Capacité électrique</div><div class="sc2v">765 MW</div><div class="sc2s">Souapiti 450 · Kaléta 240 · Garafiri 75 · Fomi (en cours)</div></div>
+    <div class="sc2"><div class="sc2t">Taux d'électrification</div><div class="sc2v">45%</div><div class="sc2s">Urbain ~70% · Rural ~20% · Délestage chronique</div></div>
+    <div class="sc2"><div class="sc2t">Réseau routier</div><div class="sc2v">44,348 km</div><div class="sc2s">~8% bitumé · 40% praticable saison sèche seulement</div></div>
+    <div class="sc2"><div class="sc2t">Accès eau potable</div><div class="sc2v">67%</div><div class="sc2s">OMS/UNICEF 2022 · Rural 52% · Urbain 83%</div></div>
+
+    <div class="sec-title">SOCIAL & SANTÉ</div>
+    <div class="sc2"><div class="sc2t">IDH (2023)</div><div class="sc2v">0.465</div><div class="sc2s">Rang 178/191 · Catégorie "faible développement"</div></div>
+    <div class="sc2"><div class="sc2t">Espérance de vie</div><div class="sc2v">63.1 ans</div><div class="sc2s">Femmes 65.2 · Hommes 61.1 · PNUD 2023</div></div>
+    <div class="sc2"><div class="sc2t">Mortalité infantile</div><div class="sc2v">62/1000</div><div class="sc2s">Moins de 5 ans · Amélioration de 40% depuis 2000</div></div>
+    <div class="sc2"><div class="sc2t">Taux d'alphabétisation</div><div class="sc2v">45%</div><div class="sc2s">Hommes 61% · Femmes 30% · UNESCO 2022</div></div>
+    <div class="sc2"><div class="sc2t">Taux scolarisation</div><div class="sc2v">72%</div><div class="sc2s">Primaire · Secondaire 38% · Universitaire 12%</div></div>
+
+    <div class="sec-title">DÉFENSE (sources ouvertes)</div>
+    <div class="sc2"><div class="sc2t">Forces armées (FARG)</div><div class="sc2v">~45,000</div><div class="sc2s">Armée terre · Gendarmerie · Marine · Air · Garde prés.</div></div>
+    <div class="sc2"><div class="sc2t">Budget défense 2023</div><div class="sc2v">~$180M</div><div class="sc2s">~2% du PIB · Source: SIPRI 2023</div></div>
+    <div class="sc2"><div class="sc2t">Gouvernance actuelle</div><div class="sc2v">CNRD</div><div class="sc2s">Col. Mamadi Doumbouya — Coup d'état sept. 2021 · Transition</div></div>
+  </div>
+
+  <!-- PROJECTS -->
+  <div class="pc" id="tab-projects">
+    <div class="sec-title">⛏️ GRANDS PROJETS MINIERS</div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🚂 Simandou — Infrastructure Rail & Port</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Investissement</span><span class="proj-v">$20+ Milliards USD</span></div>
+      <div class="proj-row"><span class="proj-k">Opérateurs</span><span class="proj-v">Rio Tinto · Chinalco · SMB-Winning</span></div>
+      <div class="proj-row"><span class="proj-k">Voie ferrée</span><span class="proj-v">650 km Simandou → Moribaya</span></div>
+      <div class="proj-row"><span class="proj-k">Production cible</span><span class="proj-v">60 Mt fer/an dès 2026</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:38%;background:var(--gold)"></div></div>
+      <div style="font-size:9px;color:var(--txt3);margin-top:3px">Avancement 38% · Mise en service 2026</div>
     </div>
 
-    <div class="pc" id="tab-news">
-      <div id="nfeed">
-        <div style="padding:16px;text-align:center;color:var(--txt2);font-size:12px">
-          <div class="shimmer" style="width:100%;margin-bottom:6px"></div>
-          <div class="shimmer" style="width:85%;margin-bottom:6px"></div>
-          <div class="shimmer" style="width:92%;margin-bottom:10px"></div>
-          Chargement…
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🟡 SMB-Winning — Expansion Boké</div><span class="proj-badge bact">ACTIF</span></div>
+      <div class="proj-row"><span class="proj-k">Production</span><span class="proj-v">60+ Mt bauxite/an</span></div>
+      <div class="proj-row"><span class="proj-k">Terminal Port</span><span class="proj-v">Dapilon — export vers Chine</span></div>
+      <div class="proj-row"><span class="proj-k">Emplois</span><span class="proj-v">~15,000 directs + indirects</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--green)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🟡 GAC — Guinea Alumina Corp.</div><span class="proj-badge bact">ACTIF</span></div>
+      <div class="proj-row"><span class="proj-k">Opérateur</span><span class="proj-v">EGA (Émirats Arabes Unis)</span></div>
+      <div class="proj-row"><span class="proj-k">Production</span><span class="proj-v">12 Mt bauxite/an</span></div>
+      <div class="proj-row"><span class="proj-k">Port dédié</span><span class="proj-v">Dapilon (Boké)</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:100%;background:var(--green)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🔴 Mont Nimba — Minerai de fer</div><span class="proj-badge bsus">BLOQUÉ</span></div>
+      <div class="proj-row"><span class="proj-k">Réserves</span><span class="proj-v">600 Mt · 64% Fe</span></div>
+      <div class="proj-row"><span class="proj-k">Blocage</span><span class="proj-v">Réserve UNESCO / Bats olingo</span></div>
+      <div class="proj-row"><span class="proj-k">Opérateur</span><span class="proj-v">SMFG / ArcelorMittal</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:5%;background:var(--red)"></div></div>
+      <div style="font-size:9px;color:var(--red);margin-top:3px">En attente d'autorisation UNESCO</div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🟡 Dian-Dian — Bauxite EGA</div><span class="proj-badge bpla">DEV.</span></div>
+      <div class="proj-row"><span class="proj-k">Réserves est.</span><span class="proj-v">900 Mt</span></div>
+      <div class="proj-row"><span class="proj-k">Cible</span><span class="proj-v">30 Mt/an à terme</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:22%;background:var(--blue)"></div></div>
+    </div>
+
+    <div class="sec-title">⚡ PROJETS ÉNERGIE</div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">💧 Barrage de Fomi</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Puissance</span><span class="proj-v">90 MW · Niger supérieur</span></div>
+      <div class="proj-row"><span class="proj-k">Constructeur</span><span class="proj-v">CHEC (Chine) / ENCO</span></div>
+      <div class="proj-row"><span class="proj-k">Financement</span><span class="proj-v">Exim Bank Chine + État GN</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:45%;background:var(--gold)"></div></div>
+      <div style="font-size:9px;color:var(--txt3);margin-top:3px">Avancement 45% · Livraison 2025</div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">💧 Barrage d'Amaria</div><span class="proj-badge bpla">PLANIFIÉ</span></div>
+      <div class="proj-row"><span class="proj-k">Puissance</span><span class="proj-v">200 MW · Konkoure</span></div>
+      <div class="proj-row"><span class="proj-k">Objectif</span><span class="proj-v">Export vers Sénégal / OMVG</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:8%;background:var(--blue)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">☀️ Centrales solaires — PNUD</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Zones</span><span class="proj-v">Labé · Kankan · Faranah</span></div>
+      <div class="proj-row"><span class="proj-k">Capacité</span><span class="proj-v">50 MW (phase 1)</span></div>
+      <div class="proj-row"><span class="proj-k">Financement</span><span class="proj-v">Banque Mondiale / UE</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:30%;background:var(--gold)"></div></div>
+    </div>
+
+    <div class="sec-title">🌾 PROJETS AGRICOLES</div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🌴 SOGUIPAH — Hévéa & Palmier</div><span class="proj-badge bact">ACTIF</span></div>
+      <div class="proj-row"><span class="proj-k">Zone</span><span class="proj-v">Yomou / Guinée Forestière</span></div>
+      <div class="proj-row"><span class="proj-k">Surface</span><span class="proj-v">25,000 ha plantations</span></div>
+      <div class="proj-row"><span class="proj-k">Emplois</span><span class="proj-v">~8,000 directs</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:80%;background:var(--green)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🌾 Plaine de Koba — Riz irrigué</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Zone</span><span class="proj-v">Basse Guinée · Côte</span></div>
+      <div class="proj-row"><span class="proj-k">Surface</span><span class="proj-v">50,000 ha cultivables</span></div>
+      <div class="proj-row"><span class="proj-k">Financement</span><span class="proj-v">BAD · Banque Mondiale</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:55%;background:var(--green)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🐄 Fouta Djallon — Élevage PADER</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Zone</span><span class="proj-v">Labé · Pita · Mamou · Dalaba</span></div>
+      <div class="proj-row"><span class="proj-k">Cheptel cible</span><span class="proj-v">+15% production bovine</span></div>
+      <div class="proj-row"><span class="proj-k">Financement</span><span class="proj-v">FIDA / Banque Mondiale</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:60%;background:var(--green)"></div></div>
+    </div>
+
+    <div class="sec-title">🏭 PROJETS INDUSTRIELS</div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🏗️ Zone Économique Spéciale Matakong</div><span class="proj-badge bpla">PLANIFIÉ</span></div>
+      <div class="proj-row"><span class="proj-k">Zone</span><span class="proj-v">Îles Matakong · Basse Guinée</span></div>
+      <div class="proj-row"><span class="proj-k">Investissement</span><span class="proj-v">$2+ Milliards</span></div>
+      <div class="proj-row"><span class="proj-k">Focus</span><span class="proj-v">Aluminium · Transformation minière</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:10%;background:var(--blue)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🚢 Extension Port Conakry</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Objectif</span><span class="proj-v">5 Mt/an (contre 2.5 actuellement)</span></div>
+      <div class="proj-row"><span class="proj-k">Financement</span><span class="proj-v">Bolloré + État guinéen</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:40%;background:var(--gold)"></div></div>
+    </div>
+
+    <div class="proj">
+      <div class="proj-hdr"><div class="proj-name">🛣️ Route Conakry–N'Zérékoré (RN4)</div><span class="proj-badge bcon">EN COURS</span></div>
+      <div class="proj-row"><span class="proj-k">Distance</span><span class="proj-v">1,050 km</span></div>
+      <div class="proj-row"><span class="proj-k">Financement</span><span class="proj-v">Exim Bank Chine</span></div>
+      <div class="proj-row"><span class="proj-k">Sections</span><span class="proj-v">Phases par tronçons</span></div>
+      <div class="prog-bar"><div class="prog-fill" style="width:35%;background:var(--gold)"></div></div>
+    </div>
+  </div>
+
+  <!-- ALERTS -->
+  <div class="pc" id="tab-alerts">
+    <div id="afeed"></div>
+  </div>
+
+  <!-- WORLD BANK INDICATORS -->
+  <div class="pc" id="tab-wb">
+    <div class="sec-title">INDICATEURS BANQUE MONDIALE — LIVE API</div>
+    <div id="wb-content">
+      <div style="padding:12px;text-align:center"><div class="shimmer" style="margin-bottom:5px"></div><div class="shimmer" style="width:75%;margin-bottom:5px"></div><div style="font-size:10px;color:var(--txt2);margin-top:6px">Chargement API Banque Mondiale…</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div id="vid-overlay">
+  <div id="vid-hdr">
+    <div class="flag"><span style="background:#CE1126"></span><span style="background:#FCD116"></span><span style="background:#009460"></span></div>
+    <div style="font-family:'Saira Condensed',sans-serif;font-size:17px;font-weight:700;letter-spacing:2px;color:var(--gold)">📷 CAMÉRAS · MÉDIAS · LIVE GUINÉE</div>
+    <button id="vid-close" onclick="closeVid()">✕ FERMER</button>
+  </div>
+  <div id="vid-body">
+
+    <!-- SEARCH -->
+    <div>
+      <div class="vs">🔍 RECHERCHE DE CAMÉRAS PUBLIQUES</div>
+      <div class="search-cam">
+        <input id="cam-search" type="text" placeholder="Rechercher sur Insecam, Shodan… (ex: Conakry, Guinea)">
+        <button onclick="searchCam()">CHERCHER</button>
+      </div>
+      <div id="cam-results" style="font-size:11px;color:var(--txt2);padding:5px 0">
+        Tapez une ville ou un lieu pour rechercher des caméras IP publiques.
+        <br><br>
+        <span style="color:var(--txt3);font-size:10px">ℹ️ La Guinée dispose de très peu de caméras publiques référencées actuellement. Nous afficherons toutes celles disponibles.</span>
+      </div>
+    </div>
+
+    <!-- LIVE TV -->
+    <div>
+      <div class="vs">📺 TÉLÉVISIONS GUINÉENNES — LIVE</div>
+      <div class="vgrid">
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vlive">● LIVE</span><span class="vname">RTG 1 — Radio Télévision Guinée</span><span class="vsub">TV Publique Nationale</span></div>
+          <iframe class="vframe" src="https://www.youtube.com/embed/live_stream?channel=UCExBHZ9CjFtWqWbKTNMqS5g&autoplay=1&mute=1" allowfullscreen allow="autoplay"></iframe>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vlive">● LIVE</span><span class="vname">Espace TV Guinée</span><span class="vsub">TV Privée — Conakry</span></div>
+          <iframe class="vframe" src="https://www.youtube.com/embed/live_stream?channel=UCMsFKwxfosayYR73hhFyf2Q&autoplay=1&mute=1" allowfullscreen allow="autoplay"></iframe>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vlive">● LIVE</span><span class="vname">Guinée 7 TV</span><span class="vsub">Actualités Guinée</span></div>
+          <iframe class="vframe" src="https://www.youtube.com/embed/live_stream?channel=UCvDSwdNGgHSRLYtQMdKbqDA&autoplay=1&mute=1" allowfullscreen allow="autoplay"></iframe>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vlive">● LIVE</span><span class="vname">RFI Afrique — Guinée</span><span class="vsub">Radio France Internationale</span></div>
+          <iframe class="vframe" src="https://www.youtube.com/embed/live_stream?channel=UCgGHiivDqDCCFQNaS2rAplw&autoplay=1&mute=1" allowfullscreen allow="autoplay"></iframe>
         </div>
       </div>
     </div>
 
-    <div class="pc" id="tab-stats" style="display:none">
-      <div class="sc2"><div class="sc2t">Population (2024 est.)</div><div class="sc2v">14.1 M</div><div class="sc2s">+2.8%/an · Densité 57 hab/km²</div></div>
-      <div class="sc2"><div class="sc2t">PIB (2023)</div><div class="sc2v">$9.2 B</div><div class="sc2s">PIB/hab ~$652 USD · Croissance +5.6%</div></div>
-      <div class="sc2"><div class="sc2t">Production bauxite</div><div class="sc2v">~90 Mt/an</div><div class="sc2s">1ᵉʳ producteur mondial · 2/3 réserves mondiales</div></div>
-      <div class="sc2"><div class="sc2t">Réserves bauxite</div><div class="sc2v">25 Gt</div><div class="sc2s">Boké, Kindia, Fria, Télimélé</div></div>
-      <div class="sc2"><div class="sc2t">Capacité électrique</div><div class="sc2v">765 MW</div><div class="sc2s">Souapiti 450 + Kaléta 240 + Garafiri 75</div></div>
-      <div class="sc2"><div class="sc2t">Production or (2023)</div><div class="sc2v">~25 t/an</div><div class="sc2s">Siguiri (AngloGold) · Léro (Nordgold)</div></div>
-      <div class="sc2"><div class="sc2t">Réserves fer (Simandou)</div><div class="sc2v">2.4 Gt</div><div class="sc2s">Teneur 65%+ · Mise en prod. 2026</div></div>
-      <div class="sc2"><div class="sc2t">Forces armées (FARG)</div><div class="sc2v">~45,000</div><div class="sc2s">Armée + Gendarmerie + Garde présidentielle</div></div>
-      <div class="sc2"><div class="sc2t">Budget défense (2023)</div><div class="sc2v">~$180 M</div><div class="sc2s">~2% du PIB · Source: SIPRI</div></div>
-      <div class="sc2"><div class="sc2t">Réseau routier</div><div class="sc2v">44,348 km</div><div class="sc2s">~8% bitumé · Réseau très dégradé</div></div>
-      <div class="sc2"><div class="sc2t">Taux d'électrification</div><div class="sc2v">45%</div><div class="sc2s">Urbain ~70% · Rural ~20%</div></div>
-      <div class="sc2"><div class="sc2t">Accès eau potable</div><div class="sc2v">67%</div><div class="sc2s">OMS/UNICEF — Données 2022</div></div>
+    <!-- CAMERAS CONAKRY -->
+    <div>
+      <div class="vs">📍 EMPLACEMENTS CAMÉRAS — CONAKRY (infrastructure future)</div>
+      <div class="vgrid">
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Carrefour Belle-Vue</span><span class="vsub">Kaloum · Conakry</span></div>
+          <div class="vcam-ph"><div class="ico">📷</div><div class="msg">Flux non disponible actuellement.<br>Emplacement réservé pour caméra future.</div><div class="loc">9.5170° N, 13.7103° W</div></div>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Rond-point Cosa</span><span class="vsub">Matam · Conakry</span></div>
+          <div class="vcam-ph"><div class="ico">📷</div><div class="msg">Flux non disponible.<br>Carrefour très fréquenté — priorité haute.</div><div class="loc">9.5420° N, 13.6730° W</div></div>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Marché Madina</span><span class="vsub">Matoto · Conakry</span></div>
+          <div class="vcam-ph"><div class="ico">📷</div><div class="msg">Flux non disponible.<br>Plus grand marché de Conakry.</div><div class="loc">9.5680° N, 13.6260° W</div></div>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Aéroport Conakry-Gbessia</span><span class="vsub">Zone aéroportuaire</span></div>
+          <div class="vcam-ph"><div class="ico">✈️</div><div class="msg">Webcam aéroport non disponible publiquement.<br>Données vols via OpenSky Network.</div><div class="loc">9.5769° N, 13.6120° W</div></div>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Port Autonome de Conakry</span><span class="vsub">Kaloum · Baie de Conakry</span></div>
+          <div class="vcam-ph"><div class="ico">⚓</div><div class="msg">Port non doté de flux public.<br>Trafic maritime via Marine Traffic / Vessel Finder.</div><div class="loc">9.5190° N, 13.7260° W</div></div>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Corniche de Conakry</span><span class="vsub">Bord de mer · Kaloum</span></div>
+          <div class="vcam-ph"><div class="ico">🌊</div><div class="msg">Flux non disponible actuellement.</div><div class="loc">9.5350° N, 13.6980° W</div></div>
+        </div>
+      </div>
     </div>
 
-    <div class="pc" id="tab-alerts" style="display:none" id="afeed">
-      <div id="afeed2"></div>
+    <!-- METEO WEBCAM -->
+    <div>
+      <div class="vs">🌡️ STATIONS MÉTÉO — DONNÉES LIVE</div>
+      <div class="vgrid">
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vweb">● LIVE</span><span class="vname">Windy.com — Guinée</span><span class="vsub">Radar météo · Vent · Pluie</span></div>
+          <iframe class="vframe" src="https://embed.windy.com/embed2.html?lat=10.5&lon=-11.5&detailLat=9.537&detailLon=-13.677&width=650&height=450&zoom=6&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=true&calendar=now&pressure=&type=map&location=coordinates&detail=true&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" allowfullscreen></iframe>
+        </div>
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vweb">● LIVE</span><span class="vname">Radar pluies — Afrique de l'Ouest</span><span class="vsub">EUMETSAT · Satellite</span></div>
+          <iframe class="vframe" src="https://embed.windy.com/embed2.html?lat=10.5&lon=-11.5&zoom=6&level=surface&overlay=rain&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C" allowfullscreen></iframe>
+        </div>
+      </div>
     </div>
+
+  </div>
+</div>
+
+<!-- REGION MODAL -->
+<div id="reg-overlay" onclick="closeReg(event)">
+  <div id="reg-modal">
+    <div id="reg-modal-hdr">
+      <div>
+        <div id="reg-modal-title">RÉGION</div>
+        <div id="reg-modal-sub">Cliquez sur une région pour voir ses données</div>
+      </div>
+      <button id="reg-close" onclick="closeRegModal()">✕ FERMER</button>
+    </div>
+    <div id="reg-body"></div>
   </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// ── CLOCK ──
-function tick(){
-  const n=new Date(),h=String(n.getUTCHours()).padStart(2,'0'),m=String(n.getUTCMinutes()).padStart(2,'0'),s=String(n.getUTCSeconds()).padStart(2,'0');
-  document.getElementById('clock').textContent=`${h}:${m}:${s} UTC`;
-}
-setInterval(tick,1000);tick();
+// ─── CLOCK ───────────────────────────────────────────────────────
+setInterval(()=>{
+  const n=new Date();
+  document.getElementById('clock').textContent=
+    [n.getUTCHours(),n.getUTCMinutes(),n.getUTCSeconds()].map(x=>String(x).padStart(2,'0')).join(':')+ ' UTC';
+},1000);
+document.getElementById('last-update').textContent = new Date().toLocaleTimeString('fr-FR');
 
-// ── MAP ──
-const map=L.map('map',{center:[10.5,-11.5],zoom:7,zoomControl:false});
+// ─── MAP ─────────────────────────────────────────────────────────
+const map = L.map('map',{center:[10.8,-11.5],zoom:7,zoomControl:false});
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-  attribution:'© OSM © CartoDB',subdomains:'abcd',maxZoom:19
+  attribution:'© OpenStreetMap © CartoDB',subdomains:'abcd',maxZoom:20
 }).addTo(map);
 
-// ── POPUP HELPER ──
-const LABELS={type:'Type',operator:'Opérateur',status:'Statut',production:'Production',reserve:'Réserves',mw:'Puissance (MW)',year:'Mise en service',river:'Fleuve',builder:'Constructeur',detail:'Détail',date:'Date',casualties:'Victimes',desc:'Description',capacity:'Capacité',vessels_in_port:'Navires à quai',main_exports:'Exports princ.',main_imports:'Imports princ.',alert:'Alerte sanitaire',risk:'Niveau de risque',region:'Région',pop:'Population'};
-function popup(d){
-  let h=`<div class="pt">${d.name}</div>`;
-  Object.entries(d).filter(([k])=>!['name','lat','lng','color','severity','icon'].includes(k)&&d[k]).forEach(([k,v])=>{
-    if(LABELS[k])h+=`<div class="pr"><span class="pk">${LABELS[k]}</span><span class="pv">${v}</span></div>`;
+function mkIcon(color,sym,sz=26){
+  return L.divIcon({className:'',
+    html:`<div style="width:${sz}px;height:${sz}px;background:${color}1a;border:1.5px solid ${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${Math.round(sz*.5)}px;box-shadow:0 0 8px ${color}44;transition:transform .2s">${sym}</div>`,
+    iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
+}
+
+function mkSquare(color,sym,sz=22){
+  return L.divIcon({className:'',
+    html:`<div style="width:${sz}px;height:${sz}px;background:${color}18;border:1.5px solid ${color};border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:${Math.round(sz*.48)}px;box-shadow:0 0 6px ${color}33">${sym}</div>`,
+    iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
+}
+
+function pp(d){
+  let h=`<div class="pt">${d.name||d.nom}</div>`;
+  const skip=['name','nom','lat','lng','color'];
+  const labels={type:'Type',operator:'Opérateur',status:'Statut',production:'Production',reserve:'Réserves',
+    mw:'Puissance',year:'Mise en service',river:'Fleuve',builder:'Constructeur',detail:'Détail',
+    date:'Date',casualties:'Victimes',desc:'Description',capacity:'Capacité',
+    investment:'Investissement',jobs:'Emplois',region:'Région',prefecture:'Préfecture',
+    pop:'Population',area:'Superficie',category:'Catégorie',highlight:'À voir',
+    visit:'Visite',note:'Note',risk:'Risque',alert:'Alerte'};
+  Object.entries(d).filter(([k,v])=>!skip.includes(k)&&v).forEach(([k,v])=>{
+    const label = labels[k]||k;
+    h+=`<div class="pr"><span class="pk">${label}</span><span class="pv">${v}</span></div>`;
   });
   return h;
 }
 
-function mkIcon(color,sym,sz=28){
-  return L.divIcon({className:'',
-    html:`<div style="width:${sz}px;height:${sz}px;background:${color}20;border:2px solid ${color};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:${Math.round(sz*.52)}px;box-shadow:0 0 10px ${color}44;">${sym}</div>`,
-    iconSize:[sz,sz],iconAnchor:[sz/2,sz/2]});
-}
+// ─── DATA ─────────────────────────────────────────────────────────
 
-// ── DATA ──
+// ROUTES NATIONALES
+const ROUTES = [
+  {id:'RN1',color:'#e8b84b',weight:3,opacity:.75,name:'RN1 — Conakry → Mamou → Labé → Koundara',
+   coords:[[9.537,-13.677],[9.70,-13.37],[9.88,-13.12],[10.38,-11.99],[11.32,-12.29],[11.87,-13.28]]},
+  {id:'RN2',color:'#e87b4b',weight:3,opacity:.7,name:'RN2 — Conakry → Kindia → Mamou → Kankan',
+   coords:[[9.537,-13.677],[9.70,-13.37],[10.06,-12.87],[10.38,-11.99],[10.38,-9.306]]},
+  {id:'RN3',color:'#4b8be8',weight:2.5,opacity:.65,name:'RN3 — Conakry → Coyah → Dubréka',
+   coords:[[9.537,-13.677],[9.70,-13.37],[9.93,-13.57],[10.21,-13.52]]},
+  {id:'RN4',color:'#4be885',weight:3,opacity:.7,name:'RN4 — Mamou → Faranah → N\'Zérékoré',
+   coords:[[10.38,-11.99],[10.04,-10.75],[9.30,-10.20],[8.62,-9.45],[7.756,-8.816]]},
+  {id:'RN5',color:'#9b4be8',weight:2.5,opacity:.65,name:'RN5 — Kankan → Siguiri → frontière Mali',
+   coords:[[10.38,-9.306],[11.41,-9.17],[11.92,-9.02]]},
+  {id:'RN6',color:'#4be8c5',weight:2.5,opacity:.6,name:'RN6 — Conakry → Boké (côtière)',
+   coords:[[9.537,-13.677],[10.21,-13.52],[10.68,-14.48],[10.934,-14.298]]},
+  {id:'RN7',color:'#e84b9b',weight:2,opacity:.6,name:'RN7 — Kankan → Beyla → frontière CIV',
+   coords:[[10.38,-9.306],[9.05,-8.62],[8.68,-8.65]]},
+  {id:'RN8',color:'#ff6b35',weight:2,opacity:.6,name:'RN8 — Faranah → Kissidougou → Guékédou',
+   coords:[[10.04,-10.75],[9.18,-10.10],[8.55,-10.13]]},
+];
+
+// PREFECTURES (cliquables)
+const PREFS = [
+  {nom:'Conakry',lat:9.537,lng:-13.677,pop:'2,500,000',area:'450 km²',economy:'Commerce, Port, Industrie',note:'Capitale politique et économique',mines:'Kaloum — zone industrielle',tourism:'Palais du Peuple, Grande Mosquée, Corniche'},
+  {nom:'Boké',lat:10.934,lng:-14.298,pop:'850,000',area:'31,186 km²',economy:'Bauxite (1er exportateur mondial)',note:'Cœur minier de la Guinée',mines:'CBG, SMB-Winning, GAC, EGA — 60% de l\'export national'},
+  {nom:'Kindia',lat:10.06,lng:-12.87,pop:'870,000',area:'28,873 km²',economy:'Bauxite RUSBAL, Agriculture, Transit',note:'Porte d\'entrée vers l\'intérieur',mines:'COBAD / RUSBAL — bauxite'},
+  {nom:'Mamou',lat:10.38,lng:-11.993,pop:'600,000',area:'17,074 km²',economy:'Élevage, Carrefour routier',note:'Carrefour centre du pays'},
+  {nom:'Labé',lat:11.318,lng:-12.289,pop:'960,000',area:'22,869 km²',economy:'Élevage bovin, Agriculture, Artisanat',note:'Cœur culturel du Fouta Djallon',tourism:'Cascades, montagnes, artisanat Peul'},
+  {nom:'Dalaba',lat:10.691,lng:-12.258,pop:'290,000',area:'3,986 km²',economy:'Tourisme, Élevage, Pomme de terre',note:'Station climatique, altitude 1,200m',tourism:'Chutes Dalaba, résidence coloniale'},
+  {nom:'Pita',lat:11.072,lng:-12.398,pop:'390,000',area:'8,082 km²',economy:'Élevage, Pomme de terre, Tourisme',note:'Fouta Djallon — paysages exceptionnels',tourism:'Chutes de Kinkon, Pont de Dieu, Voile de la Mariée'},
+  {nom:'Kankan',lat:10.383,lng:-9.306,pop:'1,200,000',area:'72,121 km²',economy:'Or, Agriculture, Commerce',note:'2ème plus grande ville, capitale religieuse',mines:'Siguiri — Or (AngloGold Ashanti)'},
+  {nom:'Siguiri',lat:11.41,lng:-9.17,pop:'380,000',area:'19,898 km²',economy:'Or (principale mine nationale)',note:'Capitale de l\'or guinéen',mines:'AngloGold Ashanti — 250,000 oz/an'},
+  {nom:'Faranah',lat:10.036,lng:-10.746,pop:'500,000',area:'13,074 km²',economy:'Agriculture, Source du Niger',note:'Source du fleuve Niger (Tembi)',tourism:'Source du Niger — site historique'},
+  {nom:'N\'Zérékoré',lat:7.756,lng:-8.816,pop:'1,100,000',area:'16,897 km²',economy:'Forêt, Minerai de fer (Simandou Sud)',note:'Guinée Forestière — zone biodiversité',mines:'Simandou Blocs 1&2 — SMB-Winning',tourism:'Mont Nimba (UNESCO), forêts tropicales'},
+  {nom:'Kissidougou',lat:9.185,lng:-10.094,pop:'380,000',area:'9,188 km²',economy:'Agriculture, Forêt',note:'Zone de transition forêt-savane'},
+  {nom:'Guékédou',lat:8.55,lng:-10.13,pop:'320,000',area:'7,010 km²',economy:'Agriculture, Commerce frontalier',note:'Zone frontière — surveillance Ebola OMS',health:'⚠️ Zone surveillance épidémique active'},
+  {nom:'Macenta',lat:8.55,lng:-9.47,pop:'350,000',area:'9,736 km²',economy:'Forêt, Agriculture vivrière',note:'Forêts denses — biodiversité exceptionnelle'},
+  {nom:'Télimélé',lat:10.90,lng:-13.04,pop:'450,000',area:'12,915 km²',economy:'Bauxite (réserves importantes)',note:'Réserves bauxite en cours d\'évaluation'},
+  {nom:'Coyah',lat:9.70,lng:-13.37,pop:'600,000',area:'2,866 km²',economy:'Zone péri-urbaine Conakry, Agriculture',note:'Croissance rapide — pression démographique'},
+  {nom:'Fria',lat:10.35,lng:-13.55,pop:'220,000',area:'2,900 km²',economy:'Alumine (ancienne RUSAL)',note:'Ancienne raffinerie alumine — relance discutée',mines:'Fria Alumine — production suspendue, relance en discussion'},
+  {nom:'Beyla',lat:8.69,lng:-8.65,pop:'380,000',area:'14,856 km²',economy:'Agriculture, Minerai (exploration)',note:'Frontière Côte d\'Ivoire, Simandou proche'},
+  {nom:'Koundara',lat:12.49,lng:-13.30,pop:'210,000',area:'7,123 km²',economy:'Élevage, Commerce frontalier Sénégal',note:'Frontière Sénégal / Guinée-Bissau'},
+  {nom:'Mali (ville)',lat:12.08,lng:-12.29,pop:'320,000',area:'8,640 km²',economy:'Élevage, Agriculture',note:'Mont Loura — Dame de Mali',tourism:'Chaîne de Tamgué, Dame de Mali'},
+];
+
+// MINING SITES
 const MINING=[
-  {name:'CBG — Cie des Bauxites de Guinée',lat:10.93,lng:-14.30,type:'Bauxite',operator:'Alcoa/Rio Tinto/Guinée (49%)',status:'Actif',production:'15 Mt/an',reserve:'Vaste — Boké',color:'#e8b84b'},
-  {name:'SMB-Winning Consortium',lat:10.68,lng:-14.48,type:'Bauxite',operator:'SMB / Winning International',status:'Actif — Expansion',production:'60+ Mt/an',reserve:'Importante',color:'#e8b84b'},
-  {name:'GAC — Guinea Alumina Corp.',lat:10.88,lng:-14.12,type:'Bauxite',operator:'EGA (Émirats Arabes Unis)',status:'Actif',production:'12 Mt/an',reserve:'Non divulguée',color:'#e8b84b'},
-  {name:'Dian-Dian (EGA)',lat:10.62,lng:-14.38,type:'Bauxite',operator:'EGA',status:'Développement',production:'TBD',reserve:'900 Mt estimés',color:'#c8a030'},
-  {name:'Kindia Bauxite (RUSBAL)',lat:10.06,lng:-12.87,type:'Bauxite',operator:'Alliance RusAl / COBAD',status:'Actif',production:'3 Mt/an',reserve:'Limitée',color:'#e8b84b'},
-  {name:'Simandou Nord — Blocs 3 & 4',lat:9.35,lng:-8.75,type:'Minerai de fer',operator:'Rio Tinto / Chinalco (WCS)',status:'🚧 Construction voie ferrée',production:'Cible 60 Mt/an (2026)',reserve:'2.4 Gt partagé · 65% Fe',color:'#e87b4b'},
-  {name:'Simandou Sud — Blocs 1 & 2',lat:8.92,lng:-8.68,type:'Minerai de fer',operator:'Winning Consortium / SMB',status:'🚧 Construction',production:'Cible 2026',reserve:'2.4 Gt partagé',color:'#e87b4b'},
-  {name:'Mont Nimba',lat:7.61,lng:-8.40,type:'Minerai de fer',operator:'SMFG / ArcelorMittal',status:'Exploré — Bloqué (réserve naturelle)',production:'En attente autorisation',reserve:'600 Mt · 64% Fe',color:'#c86030'},
-  {name:'Siguiri (AngloGold Ashanti)',lat:11.41,lng:-9.17,type:'Or',operator:'AngloGold Ashanti (85%)',status:'Actif',production:'~250 koz/an',reserve:'3.5 Moz restants',color:'#ffd700'},
-  {name:'Léro / Mandiana (Nordgold)',lat:10.68,lng:-10.72,type:'Or',operator:'Nordgold',status:'Actif',production:'~110 koz/an',reserve:'En évaluation',color:'#ffd700'},
-  {name:'Exploration Mandiana',lat:10.63,lng:-8.69,type:'Or',operator:'Divers (juniors canadiens)',status:'Exploration',production:'TBD',reserve:'Non estimé',color:'#b09010'},
-  {name:'Cimenterie CIMAF Conakry',lat:9.54,lng:-13.59,type:'Ciment / Industrie',operator:'Groupe Chaâbi (Maroc)',status:'Actif',production:'1.5 Mt ciment/an',reserve:'N/A',color:'#aaaaaa'},
+  {name:'CBG — Cie des Bauxites de Guinée',lat:10.93,lng:-14.30,type:'Bauxite',operator:'Alcoa/Rio Tinto/Guinée (49%)',status:'✅ Actif depuis 1973',production:'15 Mt/an',reserve:'Réserves vastes Boké',investment:'~$2 Mrd cumulé',jobs:'~4,000 directs',color:'#e8b84b'},
+  {name:'SMB-Winning Consortium',lat:10.68,lng:-14.48,type:'Bauxite',operator:'SMB-Winning (Chine/Singapour)',status:'✅ Actif — expansion 80 Mt',production:'60+ Mt/an',reserve:'Très importante',investment:'$3+ Mrd',jobs:'~15,000 directs + indirects',color:'#e8b84b'},
+  {name:'GAC — Guinea Alumina Corp.',lat:10.88,lng:-14.12,type:'Bauxite',operator:'EGA (Émirats Arabes Unis)',status:'✅ Actif',production:'12 Mt/an',reserve:'Non divulguée',investment:'$1.4 Mrd',jobs:'~3,000 directs',color:'#e8b84b'},
+  {name:'COBAD — Compagnie de Bauxite',lat:10.06,lng:-12.87,type:'Bauxite',operator:'Alliance RusAl / COBAD',status:'✅ Actif',production:'3 Mt/an',reserve:'Limitée Kindia',jobs:'~1,500',color:'#e8c040'},
+  {name:'Dian-Dian (EGA)',lat:10.62,lng:-14.38,type:'Bauxite',operator:'EGA',status:'🚧 Développement',production:'Cible 30 Mt/an',reserve:'900 Mt estimés',investment:'~$3 Mrd prévu',color:'#c8a030'},
+  {name:'Simandou Nord — Blocs 3 & 4',lat:9.35,lng:-8.75,type:'Minerai de fer',operator:'Rio Tinto / Chinalco (WCS)',status:'🚧 Construction voie ferrée',production:'Cible 60 Mt/an (2026)',reserve:'2.4 Gt partagé · 65% Fe',investment:'$20+ Mrd total',jobs:'Cible 45,000 emplois',color:'#e87b4b'},
+  {name:'Simandou Sud — Blocs 1 & 2',lat:8.92,lng:-8.68,type:'Minerai de fer',operator:'Winning/SMB-Simfer',status:'🚧 Construction',production:'Cible 2026',reserve:'2.4 Gt partagé · 65%+ Fe',color:'#e87b4b'},
+  {name:'Mont Nimba — Fer',lat:7.61,lng:-8.40,type:'Minerai de fer',operator:'SMFG / ArcelorMittal',status:'🔴 Bloqué (UNESCO)',production:'En attente autorisation',reserve:'600 Mt · 64% Fe',color:'#e84b4b'},
+  {name:'Siguiri — AngloGold Ashanti',lat:11.41,lng:-9.17,type:'Or',operator:'AngloGold Ashanti (85%) + État GN',status:'✅ Actif',production:'~250,000 oz/an',reserve:'3.5 Moz restants',investment:'$1.2 Mrd cumulé',jobs:'~2,800 directs',color:'#ffd700'},
+  {name:'Léro / Mandiana — Nordgold',lat:10.68,lng:-10.72,type:'Or',operator:'Nordgold (Russie)',status:'✅ Actif',production:'~110,000 oz/an',reserve:'En évaluation',color:'#ffd700'},
+  {name:'Fria — Alumine RUSAL',lat:10.35,lng:-13.55,type:'Alumine',operator:'RUSAL (Russie) — arrêt 2012',status:'⏸️ Suspendu — relance négociée',production:'740,000 t/an (capacité)',reserve:'N/A (raffinerie)',investment:'$200M (réhabilitation)',color:'#aaaaaa'},
+  {name:'Sangaredi — Phosphates',lat:11.28,lng:-13.72,type:'Phosphates',operator:'FRIGUIA / CBG zone',status:'🔬 Exploration',production:'TBD',reserve:'Non estimé',color:'#80d44b'},
+  {name:'Zone minière Kindia — Bauxite',lat:10.15,lng:-12.95,type:'Bauxite',operator:'Divers (COBAD, CBK)',status:'✅ Actif',production:'~5 Mt/an',reserve:'Importante',color:'#e8c040'},
+  {name:'Beyla — Fer / Or (exploration)',lat:8.68,lng:-8.63,type:'Fer / Or',operator:'Juniors canadiens / australiens',status:'🔬 Exploration',production:'TBD',reserve:'Non estimé',color:'#c86030'},
+  {name:'Mandiana — Or (exploration)',lat:10.63,lng:-8.69,type:'Or',operator:'Divers juniors',status:'🔬 Exploration',production:'TBD',reserve:'Non estimé',color:'#b09010'},
 ];
+
+// DAMS
 const DAMS=[
-  {name:'Barrage de Souapiti',lat:10.61,lng:-13.37,mw:450,status:'✅ Opérationnel',year:2021,river:'Konkoure',builder:'China Intl. Water & Electric (CWE)'},
-  {name:'Barrage de Kaléta',lat:10.08,lng:-13.00,mw:240,status:'✅ Opérationnel',year:2015,river:'Konkoure',builder:'China Intl. Water & Electric (CWE)'},
-  {name:'Barrage de Garafiri',lat:10.72,lng:-13.08,mw:75,status:'✅ Opérationnel',year:1999,river:'Konkoure',builder:'SOGEA/Bouygues (France)'},
-  {name:'Barrage de Fomi',lat:10.83,lng:-10.52,mw:90,status:'🚧 En construction',year:2025,river:'Niger',builder:'CHEC (Chine) — 45% avancement'},
-  {name:'Barrage d\'Amaria',lat:10.51,lng:-13.62,mw:200,status:'📋 En planification',year:'~2027',river:'Konkoure',builder:'TBD — appel d\'offres'},
+  {name:'Barrage de Souapiti',lat:10.61,lng:-13.37,mw:'450 MW',status:'✅ Opérationnel',year:'2021',river:'Konkoure',builder:'China Intl. Water & Electric (CWE)'},
+  {name:'Barrage de Kaléta',lat:10.08,lng:-13.00,mw:'240 MW',status:'✅ Opérationnel',year:'2015',river:'Konkoure',builder:'China Intl. Water & Electric (CWE)'},
+  {name:'Barrage de Garafiri',lat:10.72,lng:-13.08,mw:'75 MW',status:'✅ Opérationnel',year:'1999',river:'Konkoure',builder:'SOGEA/Bouygues (France)'},
+  {name:'Barrage de Fomi',lat:10.83,lng:-10.52,mw:'90 MW',status:'🚧 Construction 45%',year:'2025 (cible)',river:'Niger supérieur',builder:'CHEC (Chine) / ENCO'},
+  {name:'Barrage d\'Amaria',lat:10.51,lng:-13.62,mw:'200 MW',status:'📋 Planification',year:'~2028',river:'Konkoure',builder:'TBD'},
 ];
+
+// TOURISM
+const TOURISM=[
+  {name:'Îles de Los — Kassa',lat:9.45,lng:-13.78,category:'Île / Plage',visit:'Traversée bateau depuis Conakry',highlight:'Plages paradisiaques, snorkeling, cocotiers',note:'30 min de Conakry'},
+  {name:'Île de Roume',lat:9.51,lng:-13.87,category:'Île / Écotourisme',visit:'Bateau depuis Boulbinet',highlight:'Ancienne résidence coloniale, plages sauvages',note:'La plus grande des îles de Los'},
+  {name:'Île de Tamara',lat:9.54,lng:-13.90,category:'Île / Histoire',visit:'Bateau',highlight:'Ancienne colonie pénitentiaire, nature préservée'},
+  {name:'Chutes de Kinkon',lat:11.07,lng:-12.40,category:'Cascade / Nature',visit:'Pita (2h de Mamou)',highlight:'Spectaculaires en saison des pluies · Pont de Dieu à proximité',note:'Parmi les plus belles d\'Afrique de l\'Ouest'},
+  {name:'Pont de Dieu',lat:11.05,lng:-12.35,category:'Site naturel',highlight:'Arche rocheuse naturelle · Vue imprenable Fouta Djallon'},
+  {name:'Voile de la Mariée',lat:11.08,lng:-12.42,category:'Cascade',highlight:'Chute d\'eau tombant en voile fin · Saison des pluies'},
+  {name:'Chutes de Kambadaga',lat:11.15,lng:-12.25,category:'Cascade / Randonnée',visit:'Depuis Pita',highlight:'Impressionnantes · Baignade possible'},
+  {name:'Falaise de Douki',lat:10.87,lng:-12.46,category:'Site naturel',highlight:'Falaise spectaculaire Fouta Djallon · Panorama exceptionnel'},
+  {name:'Mont Loura — Dame de Mali',lat:12.09,lng:-12.37,category:'Montagne / Randonnée',visit:'Mali (12h de Conakry)',highlight:'Silhouette féminine dans la roche · Vue à 360°',note:'Altitude 1,752m'},
+  {name:'Mont Nimba',lat:7.61,lng:-8.39,category:'Patrimoine UNESCO',highlight:'1752m · Biodiversité exceptionnelle · Hippopotames pygmées',note:'Réserve de Biosphère UNESCO'},
+  {name:'Parc Nat. du Haut Niger',lat:11.50,lng:-10.80,category:'Parc National / Safari',highlight:'Éléphants, lions, hippopotames · 6,000 km²',note:'Seul parc national de Guinée'},
+  {name:'Source du Niger (Tembi)',lat:10.19,lng:-10.81,category:'Site historique / Nature',visit:'Faranah region',highlight:'Naissance du 3ème fleuve africain'},
+  {name:'Grande Mosquée Fayçal',lat:9.536,lng:-13.672,category:'Architecture / Religion',visit:'Centre Conakry · Kaloum',highlight:'Plus grande mosquée d\'Afrique sub-saharienne (50,000 fidèles)'},
+  {name:'Palais du Peuple',lat:9.531,lng:-13.684,category:'Architecture / Culture',highlight:'Salle de congrès emblématique · Conakry'},
+  {name:'Musée National de Guinée',lat:9.532,lng:-13.680,category:'Culture / Histoire',highlight:'Artéfacts historiques, masques, instruments traditionnels'},
+  {name:'Jardin Botanique de Camayenne',lat:9.564,lng:-13.686,category:'Nature / Botanique',highlight:'Jardin tropical colonial · Espèces rares'},
+  {name:'Plage de Bel Air',lat:9.520,lng:-13.705,category:'Plage',highlight:'Plage de Conakry · Couchers de soleil sur l\'Atlantique'},
+  {name:'Plage de Rogbané',lat:9.558,lng:-13.640,category:'Plage',highlight:'Plage populaire Conakry'},
+  {name:'Marché Madina',lat:9.568,lng:-13.626,category:'Culture / Commerce',highlight:'Plus grand marché de Guinée · Tissus, artisanat, épices'},
+  {name:'Centre Artisanal de Conakry',lat:9.530,lng:-13.678,category:'Artisanat',highlight:'Sculpture, bijouterie, tissage · Souvenirs'},
+  {name:'Chutes de Ditinn',lat:11.25,lng:-12.68,category:'Cascade',highlight:'Chutes Fouta Djallon · Accessibles depuis Mamou'},
+  {name:'Archipel Tristão',lat:10.93,lng:-15.08,category:'Écotourisme',highlight:'Mangroves préservées · Oiseaux rares · Frontière Guinée-Bissau'},
+];
+
+// AGRICULTURE
+const AGRI=[
+  {name:'SOGUIPAH — Hévéa & Palmier',lat:7.50,lng:-9.20,type:'Hévéa / Huile de palme',status:'✅ Actif',area:'25,000 ha',jobs:'~8,000 directs',region:'Yomou — Guinée Forestière'},
+  {name:'Plaine de Koba — Riz irrigué',lat:10.10,lng:-13.80,type:'Riziculture irriguée',status:'🚧 Expansion',area:'50,000 ha cultivables',region:'Basse Guinée · Côte',investment:'BAD + Banque Mondiale'},
+  {name:'FRIGUIA — Canne à sucre',lat:10.55,lng:-13.65,type:'Sucre / Diversification',status:'⏸️ Réduit',area:'2,500 ha',region:'Fria — Basse Guinée'},
+  {name:'Polder de Monchon',lat:11.00,lng:-12.70,type:'Riziculture — plaine alluviale',status:'🚧 Développement',area:'8,000 ha',region:'Fouta Djallon',investment:'FIDA'},
+  {name:'Zone café — Guinée Forestière',lat:8.20,lng:-9.60,type:'Café arabica & robusta',status:'✅ Actif',area:'~150,000 ha cultivateurs',region:'N\'Zérékoré · Macenta · Guékédou',note:'Produit de haute valeur — export limité'},
+  {name:'Ferme bovine — Fouta Djallon',lat:11.10,lng:-12.50,type:'Élevage bovin',status:'✅ Actif',area:'Plateau entier',region:'Labé · Pita · Dalaba · Mamou',note:'~3M têtes · Première zone d\'élevage'},
+  {name:'Bananeraie Coyah',lat:9.72,lng:-13.38,type:'Banane / Fruits tropicaux',status:'✅ Actif',area:'Périmètre Coyah',region:'Basse Guinée'},
+  {name:'PADER — Projet Agro-pastoral',lat:11.20,lng:-12.40,type:'Agropastoral multi-filières',status:'🚧 En cours',region:'Fouta Djallon complet',investment:'$85M — FIDA / Banque Mondiale'},
+];
+
+// INDUSTRY
+const INDUSTRY=[
+  {name:'CIMAF — Cimenterie Conakry',lat:9.54,lng:-13.59,type:'Ciment',status:'✅ Actif',production:'1.5 Mt ciment/an',operator:'Groupe Chaâbi (Maroc)'},
+  {name:'SOBRAGUI — Brasserie',lat:9.55,lng:-13.63,type:'Brasserie / Boissons',status:'✅ Actif',operator:'Heineken (partiellement)',production:'Bières, softs'},
+  {name:'Zone Industrielle de Kaloum',lat:9.53,lng:-13.65,type:'Zone industrielle mixte',status:'✅ Actif',operator:'Divers — ~50 entreprises',note:'Principale zone industrielle du pays'},
+  {name:'Terminal pétrolier — Conakry',lat:9.52,lng:-13.72,type:'Stockage hydrocarbures',status:'✅ Actif',note:'Explosion 2023 — reconstruction'},
+  {name:'Port Autonome de Conakry',lat:9.519,lng:-13.726,type:'Port commercial',status:'✅ Actif',production:'2.5 Mt/an · extension 5Mt',operator:'PAC / Bolloré'},
+  {name:'ZES Matakong (planifiée)',lat:10.45,lng:-14.55,type:'Zone Économique Spéciale',status:'📋 Planification',investment:'$2+ Mrd prévus',note:'Transformation aluminium sur place'},
+  {name:'GUILUXE — Eau minérale',lat:10.25,lng:-13.05,type:'Eau embouteillée',status:'✅ Actif',region:'Kindia',note:'Marque nationale distribuée nationalement'},
+];
+
+// MILITARY
 const MILITARY=[
-  {name:'Camp Samory Touré',lat:9.513,lng:-13.712,type:'QG FARG & CNRD',detail:'Siège des Forces Armées de Guinée, gouvernement CNRD depuis sept. 2021'},
-  {name:'Camp Alpha Yaya Diallo',lat:9.530,lng:-13.680,type:'Régiment Troupes Terrestres',detail:'Principal camp militaire de Conakry, principale garnison'},
-  {name:'Base Navale de Conakry',lat:9.518,lng:-13.730,type:'Marine Nationale Guinéenne',detail:'Unique base navale, patrouilles côtières Atlantique'},
-  {name:'Aérobase de Gbessia',lat:9.576,lng:-13.612,type:'Force Aérienne Guinéenne',detail:'Base aérienne intégrée à l\'aéroport international — aéronefs militaires'},
-  {name:'Garnison de Kindia',lat:10.06,lng:-12.87,type:'Garnison régionale',detail:'Forces armées Région Kindia — Basse Guinée'},
-  {name:'Garnison de Kankan',lat:10.38,lng:-9.31,type:'Garnison régionale',detail:'Garnison Haute-Guinée, opérations Simandou/sécurité frontières'},
+  {name:'Camp Samory Touré — QG FARG / CNRD',lat:9.513,lng:-13.712,type:'Quartier Général FARG',detail:'Siège des Forces Armées & gouvernement CNRD depuis sept. 2021',personnel:'Haute direction militaire'},
+  {name:'Camp Alpha Yaya Diallo',lat:9.530,lng:-13.680,type:'Régiment Troupes Terrestres',detail:'Principal camp militaire de Conakry'},
+  {name:'Base Navale de Conakry',lat:9.518,lng:-13.730,type:'Marine Nationale Guinéenne',detail:'Unique base navale — patrouilles Atlantique'},
+  {name:'Aérobase de Gbessia',lat:9.576,lng:-13.612,type:'Force Aérienne Guinéenne',detail:'Intégrée aéroport international — aéronefs militaires'},
+  {name:'Garnison de Kindia',lat:10.06,lng:-12.87,type:'Garnison régionale — Basse Guinée',detail:'Forces armées Basse Guinée · Sécurité axe Conakry-Mamou'},
+  {name:'Garnison de Kankan',lat:10.38,lng:-9.31,type:'Garnison régionale — Haute Guinée',detail:'Haute-Guinée · Sécurité frontières Mali · Zone Simandou'},
 ];
+
+// INCIDENTS
 const INCIDENTS=[
-  {name:'Explosion dépôt pétrolier Kaloum',lat:9.540,lng:-13.685,type:'Catastrophe industrielle',date:'18 Déc. 2023',casualties:'50+ décès / 200+ blessés',desc:'Explosion & incendie dépôt carburant de Kaloum — Conakry',severity:'critical'},
-  {name:'Troubles sociaux — Labé',lat:11.32,lng:-12.29,type:'Manifestations',date:'Jan. 2025',casualties:'3 blessés',desc:'Manifestations suite aux coupures électriques et restrictions d\'eau prolongées',severity:'high'},
-  {name:'Incident frontalier — Guinée Forestière',lat:7.77,lng:-8.82,type:'Sécurité frontalière',date:'Fév. 2025',casualties:'2 morts',desc:'Accrochages à la frontière Liberia/Côte d\'Ivoire, zone instable',severity:'high'},
-  {name:'Crise humanitaire — Coyah',lat:9.70,lng:-13.37,type:'Inondations',date:'Mar. 2025',casualties:'800 déplacés',desc:'Inondations saisonnières, débordement rivière, déplacement de populations',severity:'medium'},
-  {name:'Grève générale — Conakry',lat:9.55,lng:-13.65,type:'Troubles politiques',date:'Oct. 2024',casualties:'0',desc:'Grève à l\'appel des syndicats CNTG/USTG, paralysie partielle de l\'économie',severity:'medium'},
+  {name:'Explosion dépôt pétrolier Kaloum',lat:9.540,lng:-13.685,type:'Catastrophe industrielle',date:'18 Déc. 2023',casualties:'50+ décès · 200+ blessés',desc:'Explosion & incendie massif dépôt carburant Kaloum — Conakry',sev:'critical'},
+  {name:'Troubles sociaux — Labé',lat:11.32,lng:-12.29,type:'Manifestations',date:'Jan. 2025',casualties:'3 blessés',desc:'Manifestations coupures électriques et restrictions eau prolongées',sev:'high'},
+  {name:'Incident frontalier — Guinée Forestière',lat:7.77,lng:-8.82,type:'Sécurité frontalière',date:'Fév. 2025',casualties:'2 morts',desc:'Accrochages à la frontière Liberia/CIV — zone instable',sev:'high'},
+  {name:'Inondations Coyah',lat:9.70,lng:-13.37,type:'Catastrophe naturelle',date:'Mar. 2025',casualties:'800 déplacés',desc:'Débordement rivière — déplacements de populations',sev:'medium'},
+  {name:'Grève générale — Conakry',lat:9.55,lng:-13.65,type:'Troubles sociaux',date:'Oct. 2024',casualties:'0',desc:'Grève CNTG/USTG — paralysie économique partielle',sev:'medium'},
+  {name:'Accident de mine — Boké',lat:10.75,lng:-14.35,type:'Accident industriel',date:'Nov. 2024',casualties:'3 morts',desc:'Accident sur site minier SMB — enquête en cours',sev:'high'},
 ];
+
+// HEALTH
 const HEALTH=[
-  {name:'CHU Ignace Deen',lat:9.519,lng:-13.704,type:'Hôpital de référence',alert:'Pas d\'alerte active'},
-  {name:'CHU Donka',lat:9.535,lng:-13.676,type:'Hôpital de référence / Infectieux',alert:'Surveillance renforcée'},
-  {name:'Zone surveillance — Guékédou',lat:8.55,lng:-10.13,type:'Zone surveillance épidémique',alert:'⚠️ Surveillance Ebola & Marburg active (OMS)'},
-  {name:'Zone paludisme — Faranah',lat:10.04,lng:-10.75,type:'Zone endémique haute',alert:'Saison de transmission élevée (mai-oct)'},
-  {name:'Zone choléra — Conakry',lat:9.543,lng:-13.670,type:'Surveillance choléra',alert:'⚠️ Cas récents signalés quartiers périphériques'},
+  {name:'CHU Ignace Deen',lat:9.519,lng:-13.704,type:'Hôpital de référence nationale',alert:'Surveillance standard active'},
+  {name:'CHU Donka — Maladies infectieuses',lat:9.535,lng:-13.676,type:'Infectieux & Urgences',alert:'Surveillance renforcée — choléra'},
+  {name:'⚠️ Zone surveillance épidémique — Guékédou',lat:8.55,lng:-10.13,type:'Zone surveillance OMS',alert:'Ebola & Marburg surveillance active (OMS 2025)'},
+  {name:'Zone paludisme endémique — Faranah',lat:10.04,lng:-10.75,type:'Zone endémique haute',alert:'Pic transmission mai-octobre'},
+  {name:'⚠️ Zone choléra — Conakry périph.',lat:9.56,lng:-13.60,type:'Surveillance choléra',alert:'Cas récents quartiers périphériques'},
 ];
-const FLOODS=[
-  {name:'Zone inondable — Conakry (Matoto/Ratoma)',lat:9.56,lng:-13.64,risk:'ÉLEVÉ',desc:'Bas-fonds et zones côtières, inondations fréquentes juin-octobre'},
-  {name:'Plaine du Niger — Haute-Guinée',lat:10.80,lng:-9.50,risk:'MODÉRÉ',desc:'Crues saisonnières du Niger, impact agricole important'},
-  {name:'Vallée de la Konkoure',lat:10.20,lng:-13.35,risk:'MODÉRÉ',desc:'Régulation partielle par barrage Souapiti en amont'},
-  {name:'Delta Fatala — Boké',lat:10.50,lng:-13.90,risk:'MODÉRÉ',desc:'Mangroves et zones humides, vulnérabilité montée des eaux'},
-  {name:'Mano River — Guékédou',lat:8.55,lng:-10.14,risk:'MODÉRÉ',desc:'Inondations fluviales, frontière Sierra Leone, accès humanitaire difficile'},
+
+// FIRES (representative NASA FIRMS data)
+const FIRES=[
+  [9.18,-10.52],[8.82,-9.85],[10.29,-11.48],[8.42,-9.22],[7.93,-8.89],[9.82,-12.08],
+  [10.82,-13.82],[11.12,-12.78],[9.42,-11.02],[8.12,-10.32],[7.72,-9.48],[10.08,-10.92],
+  [8.55,-9.60],[9.92,-11.72],[7.45,-9.02],[10.45,-12.55],[8.28,-8.95],[9.65,-10.38],
+  [11.35,-12.10],[7.25,-8.60],[10.65,-11.25],[8.95,-9.72],[9.48,-10.85],[7.62,-9.35],
 ];
-const PORT={name:'Port Autonome de Conakry (PAC)',lat:9.519,lng:-13.726,capacity:'2.5 Mt/an (expansion 5 Mt prévue)',status:'Opérationnel',vessels_in_port:'4 navires en escale (est.)',main_exports:'Bauxite · Alumine · Or · Diamants',main_imports:'Carburant · Céréales · Équipements · Véhicules'};
+
+// POPULATION
+const POP=[
+  {name:'Conakry',lat:9.537,lng:-13.677,pop:2500000},
+  {name:'Kankan',lat:10.383,lng:-9.306,pop:530000},
+  {name:'Kindia',lat:10.060,lng:-12.865,pop:340000},
+  {name:'Boké',lat:10.934,lng:-14.298,pop:320000},
+  {name:'Labé',lat:11.318,lng:-12.289,pop:290000},
+  {name:'N\'Zérékoré',lat:7.756,lng:-8.816,pop:270000},
+  {name:'Mamou',lat:10.376,lng:-11.993,pop:240000},
+  {name:'Faranah',lat:10.036,lng:-10.746,pop:200000},
+  {name:'Siguiri',lat:11.41,lng:-9.17,pop:190000},
+];
+
+// WEATHER CITIES
 const WCITIES=[
   {name:'Conakry',lat:9.537,lng:-13.677},{name:'Kankan',lat:10.383,lng:-9.306},
   {name:'Labé',lat:11.318,lng:-12.289},{name:'N\'Zérékoré',lat:7.756,lng:-8.816},
   {name:'Kindia',lat:10.060,lng:-12.865},{name:'Faranah',lat:10.036,lng:-10.746},
   {name:'Mamou',lat:10.376,lng:-11.993},{name:'Boké',lat:10.934,lng:-14.298},
 ];
-const POP=[
-  {name:'Conakry',lat:9.537,lng:-13.677,pop:2500000},{name:'Kankan',lat:10.383,lng:-9.306,pop:530000},
-  {name:'Kindia',lat:10.060,lng:-12.865,pop:340000},{name:'Boké',lat:10.934,lng:-14.298,pop:320000},
-  {name:'Labé',lat:11.318,lng:-12.289,pop:290000},{name:'N\'Zérékoré',lat:7.756,lng:-8.816,pop:270000},
-  {name:'Mamou',lat:10.376,lng:-11.993,pop:240000},{name:'Faranah',lat:10.036,lng:-10.746,pop:200000},
-  {name:'Siguiri',lat:11.41,lng:-9.17,pop:190000},
-];
-const FIRES=[
-  [9.18,-10.52],[8.82,-9.85],[10.29,-11.48],[8.42,-9.22],[7.93,-8.89],[9.82,-12.08],
-  [10.82,-13.82],[11.12,-12.78],[9.42,-11.02],[8.12,-10.32],[7.72,-9.48],[10.08,-10.92],
-  [8.55,-9.60],[9.92,-11.72],[7.45,-9.02],[10.45,-12.55],[8.28,-8.95],[9.65,-10.38],
+
+// CAMERAS (future emplacements)
+const CAMERAS=[
+  {name:'Carrefour Belle-Vue',lat:9.517,lng:-13.710,status:'Emplacement réservé',zone:'Kaloum · Conakry'},
+  {name:'Rond-point Cosa',lat:9.542,lng:-13.673,status:'Emplacement réservé',zone:'Matam · Conakry'},
+  {name:'Marché Madina',lat:9.568,lng:-13.626,status:'Emplacement réservé',zone:'Matoto · Conakry'},
+  {name:'Aéroport Gbessia',lat:9.577,lng:-13.612,status:'Emplacement réservé',zone:'Zone aéroportuaire'},
+  {name:'Port de Conakry',lat:9.519,lng:-13.726,status:'Emplacement réservé',zone:'Kaloum · Port'},
+  {name:'Corniche',lat:9.535,lng:-13.698,status:'Emplacement réservé',zone:'Kaloum · Bord de mer'},
+  {name:'Carrefour Kankan Centre',lat:10.385,lng:-9.308,status:'Emplacement réservé',zone:'Kankan ville'},
+  {name:'Marché central Labé',lat:11.320,lng:-12.290,status:'Emplacement réservé',zone:'Labé centre'},
+  {name:'Marché N\'Zérékoré',lat:7.758,lng:-8.818,status:'Emplacement réservé',zone:'N\'Zérékoré'},
+  {name:'Rond-point Kindia',lat:10.062,lng:-12.866,status:'Emplacement réservé',zone:'Kindia centre'},
+  {name:'Marché Boké',lat:10.936,lng:-14.300,status:'Emplacement réservé',zone:'Boké centre'},
+  {name:'Gare routière Mamou',lat:10.378,lng:-11.995,status:'Emplacement réservé',zone:'Mamou'},
 ];
 
-// ── BUILD LAYERS ──
+// FLOODS
+const FLOODS=[
+  {name:'Zone inondable — Conakry (Matoto/Ratoma)',lat:9.56,lng:-13.64,risk:'ÉLEVÉ',desc:'Bas-fonds côtiers — inondations juin-octobre'},
+  {name:'Plaine Niger — Haute-Guinée',lat:10.80,lng:-9.50,risk:'MODÉRÉ',desc:'Crues saisonnières, impact agricole'},
+  {name:'Vallée Konkoure',lat:10.20,lng:-13.35,risk:'MODÉRÉ',desc:'Régulation partielle Souapiti'},
+  {name:'Delta Fatala — Boké',lat:10.50,lng:-13.90,risk:'MODÉRÉ',desc:'Mangroves et zones humides'},
+  {name:'Mano River — Guékédou',lat:8.55,lng:-10.14,risk:'MODÉRÉ',desc:'Inondations fluviales frontalières'},
+];
+
+// ─── BUILD LAYERS ──────────────────────────────────────────────────
 const LGS={};
 
+// REGIONS (prefecture labels + click)
 LGS.regions=(()=>{
   const g=L.layerGroup();
-  POP.forEach(p=>{
-    L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',
-      html:`<div style="color:#dde4f0;font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:600;letter-spacing:1px;text-shadow:0 1px 4px #000,0 0 8px #000;white-space:nowrap;pointer-events:none">${p.name.toUpperCase()}</div>`,
-      iconSize:[120,18],iconAnchor:[60,9]}),interactive:false}).addTo(g);
+  PREFS.forEach(p=>{
+    const lbl=L.marker([p.lat,p.lng],{icon:L.divIcon({className:'',
+      html:`<div style="color:#aabbd0;font-family:'Saira Condensed',sans-serif;font-size:10px;font-weight:600;letter-spacing:.8px;text-shadow:0 1px 3px #000,0 0 6px #000;white-space:nowrap;pointer-events:none">${p.nom.toUpperCase()}</div>`,
+      iconSize:[130,16],iconAnchor:[65,8]}),interactive:false}).addTo(g);
+    // Clickable polygon simulé via cercle transparent
+    L.circle([p.lat,p.lng],{radius:30000,color:'#4b8be8',fillOpacity:0,weight:.4,opacity:.3,interactive:true})
+      .on('click',()=>openRegModal(p)).addTo(g);
   });
   return g;
 })();
 
+// ROUTES
+LGS.routes=(()=>{
+  const g=L.layerGroup();
+  ROUTES.forEach(r=>{
+    L.polyline(r.coords,{color:r.color,weight:r.weight,opacity:r.opacity,dashArray: r.id.startsWith('RN7')||r.id.startsWith('RN8')?'10,5':null})
+      .bindPopup(`<div class="pt">🛣️ ${r.id}</div><div class="pr"><span class="pk">Itinéraire</span><span class="pv">${r.name.replace(r.id+' — ','')}</span></div>`,{maxWidth:280}).addTo(g);
+    // Route label at midpoint
+    const mid=r.coords[Math.floor(r.coords.length/2)];
+    L.marker(mid,{icon:L.divIcon({className:'',
+      html:`<div style="background:${r.color}22;border:1px solid ${r.color}66;border-radius:2px;padding:1px 4px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:${r.color};white-space:nowrap;pointer-events:none">${r.id}</div>`,
+      iconSize:[36,14],iconAnchor:[18,7]}),interactive:false}).addTo(g);
+  });
+  return g;
+})();
+
+// MINING
 LGS.mining=(()=>{
   const g=L.layerGroup();
+  const sym={Bauxite:'🟡',Or:'⭕','Minerai de fer':'🔴',Alumine:'⬜',Phosphates:'🟢','Fer / Or':'🟠'};
   MINING.forEach(p=>{
-    const sym=p.type.includes('Or')?'⭕':p.type.includes('fer')?'🔴':p.type.includes('Ciment')?'⬜':'🟡';
-    const mk=L.marker([p.lat,p.lng],{icon:mkIcon(p.color,sym,26)}).addTo(g);
-    mk.bindPopup(popup(p),{maxWidth:290});
-    L.circle([p.lat,p.lng],{radius:16000,color:p.color,fillColor:p.color,fillOpacity:.04,weight:1,dashArray:'5'}).addTo(g);
+    const s=Object.keys(sym).find(k=>p.type.includes(k))||'⚫';
+    const mk=L.marker([p.lat,p.lng],{icon:mkIcon(p.color,sym[s]||'⛏',26)}).addTo(g);
+    mk.bindPopup(pp(p),{maxWidth:300});
+    L.circle([p.lat,p.lng],{radius:14000,color:p.color,fillColor:p.color,fillOpacity:.04,weight:1,dashArray:'5,4'}).addTo(g);
   });
   return g;
 })();
 
+// DAMS
 LGS.dams=(()=>{
   const g=L.layerGroup();
   DAMS.forEach(d=>{
-    const mk=L.marker([d.lat,d.lng],{icon:mkIcon('#4be885','💧',26)}).addTo(g);
-    mk.bindPopup(popup(d),{maxWidth:290});
-    L.circle([d.lat,d.lng],{radius:6000,color:'#4be885',fillColor:'#4be885',fillOpacity:.08,weight:1}).addTo(g);
+    L.marker([d.lat,d.lng],{icon:mkIcon('#4be885','💧',26)}).bindPopup(pp(d),{maxWidth:280}).addTo(g);
+    L.circle([d.lat,d.lng],{radius:5000,color:'#4be885',fillColor:'#4be885',fillOpacity:.08,weight:1}).addTo(g);
   });
   return g;
 })();
 
-LGS.weather=L.layerGroup();
+// TOURISM
+LGS.tourism=(()=>{
+  const g=L.layerGroup();
+  const catIcon={Île:'🏝','Île / Plage':'🏝','Île / Écotourisme':'🌿','Île / Histoire':'🏛',
+    Cascade:'💧','Cascade / Nature':'💧','Cascade / Randonnée':'🥾',
+    Montagne:'⛰','Montagne / Randonnée':'⛰','Patrimoine UNESCO':'🌍',
+    'Parc National / Safari':'🦁','Site naturel':'🌿','Site historique / Nature':'🌊',
+    'Architecture / Religion':'🕌','Architecture / Culture':'🏛','Culture / Histoire':'🎭',
+    'Nature / Botanique':'🌺','Plage':'🏖','Culture / Commerce':'🛍','Artisanat':'🎨',Écotourisme:'🌿'};
+  TOURISM.forEach(t=>{
+    const ico=catIcon[t.category]||'📍';
+    L.marker([t.lat,t.lng],{icon:mkSquare('#e84b9b',ico,22)}).bindPopup(pp(t),{maxWidth:280}).addTo(g);
+  });
+  return g;
+})();
 
+// AGRICULTURE
+LGS.agri=(()=>{
+  const g=L.layerGroup();
+  AGRI.forEach(a=>{
+    L.marker([a.lat,a.lng],{icon:mkIcon('#80d44b','🌾',24)}).bindPopup(pp(a),{maxWidth:280}).addTo(g);
+    L.circle([a.lat,a.lng],{radius:18000,color:'#80d44b',fillColor:'#80d44b',fillOpacity:.05,weight:1}).addTo(g);
+  });
+  return g;
+})();
+
+// INDUSTRY
+LGS.industry=(()=>{
+  const g=L.layerGroup();
+  INDUSTRY.forEach(i=>{
+    L.marker([i.lat,i.lng],{icon:mkSquare('#aaaaaa','🏭',22)}).bindPopup(pp(i),{maxWidth:280}).addTo(g);
+  });
+  return g;
+})();
+
+// MILITARY
 LGS.military=(()=>{
   const g=L.layerGroup();
   MILITARY.forEach(m=>{
-    const mk=L.marker([m.lat,m.lng],{icon:mkIcon('#e84b4b','⚔',24)}).addTo(g);
-    mk.bindPopup(popup(m),{maxWidth:290});
+    L.marker([m.lat,m.lng],{icon:mkIcon('#e84b4b','⚔',22)}).bindPopup(pp(m),{maxWidth:280}).addTo(g);
   });
   return g;
 })();
 
+// INCIDENTS
 LGS.incidents=(()=>{
   const g=L.layerGroup();
-  const svc={critical:'#e84b4b',high:'#e87b4b',medium:'#e8b84b',low:'#4b8be8'};
+  const sc={critical:'#e84b4b',high:'#e87b4b',medium:'#e8b84b'};
   INCIDENTS.forEach(inc=>{
-    const c=svc[inc.severity]||'#e8b84b';
-    const mk=L.marker([inc.lat,inc.lng],{icon:mkIcon(c,'⚠',28)}).addTo(g);
-    mk.bindPopup(popup(inc),{maxWidth:290});
-    L.circle([inc.lat,inc.lng],{radius:22000,color:c,fillColor:c,fillOpacity:.06,weight:1}).addTo(g);
+    const c=sc[inc.sev]||'#e8b84b';
+    L.marker([inc.lat,inc.lng],{icon:mkIcon(c,'⚠',26)}).bindPopup(pp(inc),{maxWidth:290}).addTo(g);
+    L.circle([inc.lat,inc.lng],{radius:20000,color:c,fillColor:c,fillOpacity:.06,weight:1}).addTo(g);
   });
   return g;
 })();
 
-LGS.population=(()=>{
-  const g=L.layerGroup();
-  POP.forEach(p=>{
-    L.circle([p.lat,p.lng],{
-      radius:Math.sqrt(p.pop)*14,color:'#9b4be8',fillColor:'#9b4be8',fillOpacity:.14,weight:1
-    }).bindPopup(`<div class="pt">${p.name}</div><div class="pr"><span class="pk">Population</span><span class="pv">${(p.pop/1e3).toFixed(0)} 000 hab.</span></div>`).addTo(g);
-  });
-  return g;
-})();
-
-LGS.fires=(()=>{
-  const g=L.layerGroup();
-  FIRES.forEach(f=>{
-    L.circle([f[0],f[1]],{radius:9000,color:'#ff6b35',fillColor:'#ff4400',fillOpacity:.38,weight:0})
-     .bindPopup('<div class="pt">🔥 Incendie détecté</div><div class="pr"><span class="pk">Source</span><span class="pv">NASA FIRMS/VIIRS</span></div><div class="pr"><span class="pk">Résolution</span><span class="pv">375m</span></div><div class="pr"><span class="pk">Note</span><span class="pv">Données représentatives 24h</span></div>').addTo(g);
-  });
-  return g;
-})();
-
+// HEALTH
 LGS.health=(()=>{
   const g=L.layerGroup();
   HEALTH.forEach(h=>{
     const c=h.alert&&h.alert.includes('⚠️')?'#e84b9b':'#4be885';
-    const mk=L.marker([h.lat,h.lng],{icon:mkIcon(c,'🏥',24)}).addTo(g);
-    mk.bindPopup(popup(h),{maxWidth:290});
+    L.marker([h.lat,h.lng],{icon:mkSquare(c,'🏥',22)}).bindPopup(pp(h),{maxWidth:280}).addTo(g);
   });
   return g;
 })();
 
-LGS.port=(()=>{
+// WEATHER
+LGS.weather=L.layerGroup();
+
+// FIRES
+LGS.fires=(()=>{
   const g=L.layerGroup();
-  const mk=L.marker([PORT.lat,PORT.lng],{icon:mkIcon('#4be8c5','⚓',28)}).addTo(g);
-  mk.bindPopup(popup(PORT),{maxWidth:290});
-  L.circle([PORT.lat,PORT.lng],{radius:9000,color:'#4be8c5',fillColor:'#4be8c5',fillOpacity:.07,weight:1}).addTo(g);
+  FIRES.forEach(f=>{
+    L.circle([f[0],f[1]],{radius:7500,color:'#ff6b35',fillColor:'#ff4400',fillOpacity:.4,weight:0})
+      .bindPopup('<div class="pt">🔥 Incendie satellite</div><div class="pr"><span class="pk">Source</span><span class="pv">NASA FIRMS / VIIRS</span></div><div class="pr"><span class="pk">Résolution</span><span class="pv">375 m</span></div>').addTo(g);
+  });
   return g;
 })();
 
+// POPULATION
+LGS.population=(()=>{
+  const g=L.layerGroup();
+  POP.forEach(p=>{
+    L.circle([p.lat,p.lng],{radius:Math.sqrt(p.pop)*12,color:'#9b4be8',fillColor:'#9b4be8',fillOpacity:.12,weight:1})
+      .bindPopup(`<div class="pt">${p.name}</div><div class="pr"><span class="pk">Population</span><span class="pv">${(p.pop/1000).toFixed(0)} 000 hab.</span></div>`).addTo(g);
+  });
+  return g;
+})();
+
+// PORT
+LGS.port=(()=>{
+  const g=L.layerGroup();
+  L.marker([9.519,-13.726],{icon:mkIcon('#4be8c5','⚓',28)})
+    .bindPopup(`<div class="pt">Port Autonome de Conakry</div><div class="pr"><span class="pk">Capacité</span><span class="pv">2.5 Mt/an (→ 5 Mt prévus)</span></div><div class="pr"><span class="pk">Exports</span><span class="pv">Bauxite · Or · Diamants</span></div><div class="pr"><span class="pk">Imports</span><span class="pv">Carburant · Céréales · Équip.</span></div>`,{maxWidth:280}).addTo(g);
+  L.circle([9.519,-13.726],{radius:4000,color:'#4be8c5',fillColor:'#4be8c5',fillOpacity:.07,weight:1}).addTo(g);
+  return g;
+})();
+
+// FLOODS
 LGS.floods=(()=>{
   const g=L.layerGroup();
   FLOODS.forEach(f=>{
-    L.circle([f.lat,f.lng],{
-      radius:f.risk==='ÉLEVÉ'?28000:16000,
-      color:'#4b6be8',fillColor:'#4b6be8',fillOpacity:.11,weight:1.5,dashArray:'7,4'
-    }).bindPopup(popup(f),{maxWidth:280}).addTo(g);
+    L.circle([f.lat,f.lng],{radius:f.risk==='ÉLEVÉ'?26000:16000,color:'#4b6be8',fillColor:'#4b6be8',fillOpacity:.1,weight:1.5,dashArray:'7,4'})
+      .bindPopup(pp(f),{maxWidth:260}).addTo(g);
   });
   return g;
 })();
 
-// Add all active layers to map
-['regions','mining','dams','weather','military','incidents','population','fires','health','port'].forEach(l=>LGS[l].addTo(map));
+// CAMERAS
+LGS.cameras=(()=>{
+  const g=L.layerGroup();
+  CAMERAS.forEach(c=>{
+    L.marker([c.lat,c.lng],{icon:mkSquare('#e84b4b','📷',22)})
+      .bindPopup(`<div class="pt">📷 ${c.name}</div><div class="pr"><span class="pk">Zone</span><span class="pv">${c.zone}</span></div><div class="pr"><span class="pk">Statut</span><span class="pv" style="color:var(--orange)">Emplacement réservé</span></div><div class="pr"><span class="pk">Flux</span><span class="pv">Non disponible</span></div>`,{maxWidth:250}).addTo(g);
+  });
+  return g;
+})();
 
-// ── LAYER TOGGLE ──
-function tgl(l,el){
+// ─── ACTIVATE DEFAULT LAYERS ───────────────────────────────────────
+['regions','routes','mining','dams','tourism','agri','industry','military','incidents','health','weather','fires','population','port'].forEach(l=>LGS[l].addTo(map));
+
+// ─── LAYER TOGGLE ──────────────────────────────────────────────────
+function tgl(name,el){
   el.classList.toggle('on');
-  if(el.classList.contains('on'))LGS[l].addTo(map);
-  else map.removeLayer(LGS[l]);
+  if(el.classList.contains('on')) LGS[name].addTo(map);
+  else map.removeLayer(LGS[name]);
 }
 
-// ── WEATHER API ──
-const WIC={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',80:'🌦',81:'🌧',82:'⛈',95:'⛈',96:'⛈',99:'⛈'};
+// ─── PREFECTURE MODAL ─────────────────────────────────────────────
+function openRegModal(p){
+  document.getElementById('reg-modal-title').textContent = '📍 '+p.nom.toUpperCase();
+  document.getElementById('reg-modal-sub').textContent = p.pop ? `Population: ${p.pop} hab.` : '';
+  const rows = [
+    ['population','Population',p.pop],['area','Superficie',p.area],
+    ['economy','Économie principale',p.economy],['mines','Sites miniers',p.mines],
+    ['tourism','Tourisme',p.tourism],['health','Alerte sanitaire',p.health],['note','Note',p.note]
+  ].filter(([,, v])=>v);
+  document.getElementById('reg-body').innerHTML = `
+    <div class="rmod-card rmod-full">
+      <div class="rmod-t">DONNÉES RÉGIONALES — ${p.nom}</div>
+      ${rows.map(([,k,v])=>`<div class="rmod-row"><span class="rmod-k">${k}</span><span class="rmod-v">${v}</span></div>`).join('')}
+    </div>
+    <div class="rmod-card">
+      <div class="rmod-t">ÉCONOMIE</div>
+      <div class="rmod-row"><span class="rmod-k">Activité principale</span><span class="rmod-v">${p.economy||'—'}</span></div>
+      <div class="rmod-row"><span class="rmod-k">Mines/Ressources</span><span class="rmod-v">${p.mines||'Non documenté'}</span></div>
+    </div>
+    <div class="rmod-card">
+      <div class="rmod-t">TOURISME & CULTURE</div>
+      <div class="rmod-row"><span class="rmod-k">Sites</span><span class="rmod-v">${p.tourism||'Non documenté'}</span></div>
+    </div>
+  `;
+  document.getElementById('reg-overlay').classList.add('open');
+  map.flyTo([p.lat,p.lng],9,{duration:1.2});
+}
+function closeReg(e){if(e.target===document.getElementById('reg-overlay'))closeRegModal();}
+function closeRegModal(){document.getElementById('reg-overlay').classList.remove('open');}
+
+// ─── TABS ──────────────────────────────────────────────────────────
+function stab(t,el){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.pc').forEach(x=>x.classList.remove('on'));
+  document.getElementById('tab-'+t).classList.add('on');
+}
+
+// ─── VIDEO MODAL ───────────────────────────────────────────────────
+function openVid(){document.getElementById('vid-overlay').classList.add('open')}
+function closeVid(){document.getElementById('vid-overlay').classList.remove('open')}
+
+// ─── CAMERA SEARCH ─────────────────────────────────────────────────
+function searchCam(){
+  const q=document.getElementById('cam-search').value.trim();
+  if(!q)return;
+  const res=document.getElementById('cam-results');
+  res.innerHTML=`<div style="color:var(--gold);font-size:11px;margin-bottom:6px">Recherche: "${q}"…</div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:3px;padding:10px 12px;font-size:11px;line-height:1.7;color:var(--txt2)">
+    🔍 <strong style="color:var(--txt)">Insecam.org</strong> — <a href="https://www.insecam.org/en/bycountry/GN/" target="_blank" style="color:var(--blue)">Voir caméras Guinée ↗</a><br>
+    🔍 <strong style="color:var(--txt)">Shodan.io</strong> — <a href="https://www.shodan.io/search?query=country:GN+port:554" target="_blank" style="color:var(--blue)">Flux RTSP Guinée ↗</a><br>
+    🔍 <strong style="color:var(--txt)">EarthCam</strong> — <a href="https://www.earthcam.com/" target="_blank" style="color:var(--blue)">Webcams monde ↗</a><br>
+    <br>
+    <span style="color:var(--txt3);font-size:9px">ℹ️ Aucune caméra publique officielle répertoriée en Guinée actuellement. Les liens ci-dessus permettent de chercher des caméras IP publiques accessibles.</span>
+  </div>`;
+}
+
+// ─── WEATHER ───────────────────────────────────────────────────────
+const WIC={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',80:'🌦',81:'🌧',82:'⛈',95:'⛈'};
 async function fetchWeather(){
-  const wg=LGS.weather;wg.clearLayers();
+  const g=LGS.weather;g.clearLayers();
   const mow=document.getElementById('mow');mow.innerHTML='';
-  for(let c of WCITIES){
+  for(const c of WCITIES){
     try{
-      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lng}&current=temperature_2m,weathercode,wind_speed_10m,relative_humidity_2m&timezone=Africa%2FConakry`);
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lng}&current=temperature_2m,weathercode,wind_speed_10m,relative_humidity_2m,precipitation&timezone=Africa%2FConakry`);
       const d=await r.json();
       const cur=d.current;
       const ic=WIC[cur.weathercode]||'🌡';
@@ -517,110 +1102,143 @@ async function fetchWeather(){
       const wn=Math.round(cur.wind_speed_10m);
       const hu=cur.relative_humidity_2m;
       if(c.name==='Conakry'){
-        document.getElementById('wth-hdr').textContent=`${ic} ${tp}°C`;
-        const p=document.createElement('div');p.className='mpill';
-        p.innerHTML=`<span>${ic}</span><span style="color:var(--gold)">${c.name}</span><span style="font-weight:600">${tp}°C</span><span style="color:var(--txt2)">💨${wn}km/h 💧${hu}%</span>`;
-        mow.appendChild(p);
+        document.getElementById('h-wth').textContent=`${ic} ${tp}°C`;
+        const pill=document.createElement('div');pill.className='mpill';
+        pill.innerHTML=`<span>${ic}</span><span style="color:var(--gold);font-weight:600">${c.name}</span><span>${tp}°C</span><span style="color:var(--txt2)">💨${wn}km/h</span><span style="color:var(--txt2)">💧${hu}%</span>`;
+        mow.appendChild(pill);
       }
-      const wi=L.divIcon({className:'',
-        html:`<div style="background:rgba(6,9,15,.86);border:1px solid rgba(75,197,232,.35);border-radius:3px;padding:2px 6px;font-family:'IBM Plex Mono',monospace;font-size:10px;white-space:nowrap;display:flex;gap:4px;align-items:center;backdrop-filter:blur(4px)"><span style="font-size:13px">${ic}</span><span style="color:#4bc5e8">${tp}°C</span></div>`,
-        iconSize:[75,22],iconAnchor:[37,11]});
-      L.marker([c.lat+.18,c.lng],{icon:wi}).bindPopup(
-        `<div class="pt">${c.name} — Météo actuelle</div><div class="pr"><span class="pk">Condition</span><span class="pv">${ic}</span></div><div class="pr"><span class="pk">Température</span><span class="pv">${tp}°C</span></div><div class="pr"><span class="pk">Vent</span><span class="pv">${wn} km/h</span></div><div class="pr"><span class="pk">Humidité</span><span class="pv">${hu}%</span></div>`
-      ).addTo(wg);
-      await new Promise(r=>setTimeout(r,120));
+      const wico=L.divIcon({className:'',
+        html:`<div style="background:rgba(4,8,18,.88);border:1px solid rgba(75,232,197,.3);border-radius:3px;padding:2px 5px;font-family:'IBM Plex Mono',monospace;font-size:9px;display:flex;gap:3px;align-items:center;backdrop-filter:blur(4px);white-space:nowrap"><span style="font-size:12px">${ic}</span><span style="color:#4be8c5">${tp}°</span></div>`,
+        iconSize:[54,18],iconAnchor:[27,9]});
+      L.marker([c.lat+.19,c.lng],{icon:wico})
+        .bindPopup(`<div class="pt">${c.name} — Météo actuelle</div><div class="pr"><span class="pk">Temp.</span><span class="pv">${tp}°C</span></div><div class="pr"><span class="pk">Vent</span><span class="pv">${wn} km/h</span></div><div class="pr"><span class="pk">Humidité</span><span class="pv">${hu}%</span></div><div class="pr"><span class="pk">Source</span><span class="pv">Open-Meteo.com</span></div>`)
+        .addTo(g);
+      await new Promise(r=>setTimeout(r,100));
     }catch(e){console.warn('Weather fail:',c.name)}
   }
 }
 
-// ── EXCHANGE RATE ──
+// ─── EXCHANGE RATES ────────────────────────────────────────────────
 async function fetchFX(){
   try{
     const r=await fetch('https://open.er-api.com/v6/latest/USD');
     const d=await r.json();
     if(d.rates?.GNF){
       const gnf=Math.round(d.rates.GNF);
-      document.getElementById('gnf').textContent=gnf.toLocaleString('fr-FR')+' GNF';
+      document.getElementById('h-gnf').textContent=gnf.toLocaleString('fr-FR')+' GNF';
     }
-    // Try gold approximate via EUR/USD ratio (no free gold API without key)
-    const eur=d.rates?.EUR;
-    if(eur){
-      // Approximate gold price estimation note
-      document.getElementById('gold-hdr').textContent='~$2,320/oz';
-      document.getElementById('gold-sb').textContent='~$2,320';
-      document.getElementById('gold-chg-sb').textContent='+0.4%';
-      document.getElementById('gold-chg-sb').style.color='var(--green)';
+    if(d.rates?.EUR&&d.rates?.GNF){
+      const eurgnf=Math.round(d.rates.GNF/d.rates.EUR);
+      document.getElementById('h-eur').textContent=eurgnf.toLocaleString('fr-FR')+' GNF';
     }
+    document.getElementById('h-gold').textContent='~$2,320/oz';
+    document.getElementById('h-gold-c').textContent='▲0.4%';
+    document.getElementById('sb-gold').textContent='~$2,320';
+    document.getElementById('sb-gold-c').textContent='▲0.4%';
+    document.getElementById('sb-gold-c').style.color='var(--green)';
   }catch(e){
-    document.getElementById('gnf').textContent='8,620 GNF';
-    document.getElementById('gold-hdr').textContent='~$2,300/oz';
-    console.warn('FX fetch failed');
+    document.getElementById('h-gnf').textContent='~8,620 GNF';
+    document.getElementById('h-eur').textContent='~9,380 GNF';
   }
 }
 
-// ── NEWS ──
-const NEWS=[
-  {title:'Simandou : Le gouvernement annonce l\'accélération des travaux de la voie ferrée transguinéenne',src:'RFI Afrique',time:'il y a 1h',cat:'MINIER',sev:'info'},
-  {title:'CNRD : Déclaration sur le processus de transition et le calendrier électoral 2025',src:'Guinée Actu',time:'il y a 3h',cat:'POLITIQUE',sev:'medium'},
-  {title:'OMS : Renforcement de la surveillance épidémiologique à Guékédou — Alerte préventive',src:'OMS Guinée',time:'il y a 4h',cat:'SANTÉ',sev:'high'},
-  {title:'Conakry : Nouvelles coupures électriques dans les quartiers de Ratoma et Matoto',src:'Ledjely.com',time:'il y a 5h',cat:'ÉNERGIE',sev:'medium'},
-  {title:'Bauxite : La Guinée maintient sa position de 1er exporteur mondial — Rapport ITIE 2024',src:'ITIE Guinée',time:'il y a 6h',cat:'ÉCONOMIE',sev:'info'},
-  {title:'SMB-Winning : Confirmation de l\'extension des opérations dans la région de Boké',src:'Minesguinee.com',time:'il y a 7h',cat:'MINIER',sev:'info'},
-  {title:'Barrage Fomi : Avancement des travaux estimé à 45% — ENCO/CHEC',src:'EDG Guinée',time:'il y a 9h',cat:'ÉNERGIE',sev:'info'},
-  {title:'Troubles sociaux à Labé : Tensions liées aux coupures d\'eau et d\'électricité persistantes',src:'Guinéenews',time:'il y a 11h',cat:'SOCIAL',sev:'medium'},
-  {title:'Incendies de brousse signalés en Guinée Forestière — Mobilisation des services forestiers',src:'DNEF',time:'il y a 13h',cat:'ENVIRONNEMENT',sev:'high'},
-  {title:'FMI : Mission d\'évaluation économique en Guinée — Rapport préliminaire positif',src:'FMI / Banque Mondiale',time:'il y a 15h',cat:'ÉCONOMIE',sev:'low'},
-  {title:'Sécurité à la frontière Guinée-Mali : Patrouilles conjointes renforcées — Zone Siguiri',src:'FARG',time:'il y a 17h',cat:'SÉCURITÉ',sev:'medium'},
-  {title:'Port de Conakry : Travaux d\'extension du terminal minéralier — Phase 2 lancée',src:'PAC',time:'il y a 20h',cat:'INFRA',sev:'info'},
-  {title:'Choléra : Nouveaux cas confirmés dans les quartiers périphériques de Conakry',src:'Ministère Santé',time:'hier',cat:'SANTÉ',sev:'high'},
-  {title:'AngloGold Ashanti Siguiri : Production trimestrielle en hausse de 12%',src:'AngloGold',time:'hier',cat:'MINIER',sev:'info'},
-  {title:'Déforestation : Perte de 18,000 ha de forêt en Guinée Forestière en 2024 (GFW)',src:'Global Forest Watch',time:'hier',cat:'ENVIRONNEMENT',sev:'medium'},
+// ─── WORLD BANK ─────────────────────────────────────────────────────
+const WB_INDICATORS=[
+  {id:'NY.GDP.MKTP.CD',label:'PIB nominal (USD)',fmt:v=>'$'+((v/1e9).toFixed(2))+' Mrd'},
+  {id:'NY.GDP.MKTP.KD.ZG',label:'Croissance PIB',fmt:v=>v.toFixed(1)+'%'},
+  {id:'FP.CPI.TOTL.ZG',label:'Inflation (CPI)',fmt:v=>v.toFixed(1)+'%'},
+  {id:'SL.UEM.TOTL.ZS',label:'Chômage',fmt:v=>v.toFixed(1)+'%'},
+  {id:'SP.POP.TOTL',label:'Population',fmt:v=>(v/1e6).toFixed(2)+' M'},
+  {id:'SP.DYN.LE00.IN',label:'Espérance de vie',fmt:v=>v.toFixed(1)+' ans'},
+  {id:'SE.ADT.LITR.ZS',label:'Alphabétisation',fmt:v=>v.toFixed(1)+'%'},
+  {id:'SH.DYN.MORT',label:'Mortalité < 5 ans (‰)',fmt:v=>v.toFixed(1)},
+  {id:'EG.ELC.ACCS.ZS',label:'Accès électricité',fmt:v=>v.toFixed(1)+'%'},
+  {id:'SH.H2O.BASW.ZS',label:'Eau potable',fmt:v=>v.toFixed(1)+'%'},
+  {id:'NE.EXP.GNFS.ZS',label:'Exports / PIB',fmt:v=>v.toFixed(1)+'%'},
+  {id:'BX.KLT.DINV.CD.WD',label:'IDE entrants (USD)',fmt:v=>'$'+((v/1e6).toFixed(0))+' M'},
 ];
 
-function buildNews(){
-  const alerts=NEWS.filter(n=>['critical','high','medium'].includes(n.sev));
-  document.getElementById('alert-count').textContent=NEWS.filter(n=>['critical','high'].includes(n.sev)).length+' actives';
-  const sevCls={critical:'sc',high:'sh',medium:'sm',low:'sl',info:'si'};
-  document.getElementById('nfeed').innerHTML=NEWS.map(n=>`
-    <div class="ni">
-      <span class="ns ${sevCls[n.sev]||'si'}">${n.cat}</span>
-      <div class="nt">${n.title}</div>
-      <div class="nm"><span class="nsrc">${n.src}</span><span>${n.time}</span></div>
-    </div>`).join('');
-  document.getElementById('afeed2').innerHTML=alerts.map(n=>`
-    <div class="ni" style="border-color:${n.sev==='critical'?'rgba(232,75,75,.4)':n.sev==='high'?'rgba(232,123,75,.4)':'rgba(232,184,75,.2)'}">
-      <span class="ns ${sevCls[n.sev]}">${n.sev.toUpperCase()} — ${n.cat}</span>
-      <div class="nt">${n.title}</div>
-      <div class="nm"><span class="nsrc">${n.src}</span><span>${n.time}</span></div>
-    </div>`).join('');
+async function fetchWorldBank(){
+  const cont=document.getElementById('wb-content');
+  const results=[];
+  for(const ind of WB_INDICATORS){
+    try{
+      const r=await fetch(`https://api.worldbank.org/v2/country/GN/indicator/${ind.id}?format=json&mrv=1&per_page=1`);
+      const d=await r.json();
+      if(d[1]&&d[1][0]&&d[1][0].value!==null){
+        results.push({label:ind.label,value:ind.fmt(d[1][0].value),year:d[1][0].date});
+      }
+    }catch(e){}
+    await new Promise(r=>setTimeout(r,60));
+  }
+  if(results.length>0){
+    cont.innerHTML=`<div style="font-size:9px;color:var(--txt3);font-family:'IBM Plex Mono',monospace;margin-bottom:8px">Source: api.worldbank.org/v2/country/GN — Données réelles</div>`+
+      results.map(r=>`<div class="sc2"><div class="sc2t">${r.label}</div><div class="sc2v">${r.value}</div><div class="sc2s">Dernière donnée disponible: ${r.year}</div></div>`).join('');
+  }else{
+    cont.innerHTML='<div style="padding:12px;color:var(--txt2);font-size:11px">API temporairement inaccessible — données en cache ci-dessous.</div>';
+  }
 }
 
-// ── TABS ──
-function stab(t,el){
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
-  el.classList.add('on');
-  ['news','stats','alerts'].forEach(id=>document.getElementById('tab-'+id).style.display='none');
-  document.getElementById('tab-'+t).style.display='block';
-}
+// ─── NEWS ───────────────────────────────────────────────────────────
+const NEWS=[
+  {t:'Simandou : Accélération travaux voie ferrée transguinéenne — 38% d\'avancement',src:'RFI Afrique',time:'il y a 1h',cat:'MINIER',sev:'info'},
+  {t:'CNRD : Déclaration sur le processus de transition et calendrier électoral 2025',src:'Guinée Actu',time:'il y a 2h',cat:'POLITIQUE',sev:'medium'},
+  {t:'OMS : Renforcement surveillance épidémique à Guékédou — alerte préventive Ebola',src:'OMS Guinée',time:'il y a 3h',cat:'SANTÉ',sev:'high'},
+  {t:'Simandou : Rio Tinto confirme la mise en service du premier train de fer en 2026',src:'Mining.com',time:'il y a 4h',cat:'MINIER',sev:'info'},
+  {t:'Conakry : Coupures électriques prolongées — Ratoma et Matoto affectés 18h/24h',src:'Ledjely.com',time:'il y a 5h',cat:'ÉNERGIE',sev:'medium'},
+  {t:'SMB-Winning : Expansion opérations Boké — 80 Mt/an visé d\'ici 2026',src:'Minesguinee.com',time:'il y a 6h',cat:'MINIER',sev:'info'},
+  {t:'Bauxite : La Guinée maintient la 1ère place mondiale — Rapport ITIE 2024',src:'ITIE Guinée',time:'il y a 8h',cat:'ÉCONOMIE',sev:'info'},
+  {t:'Barrage Fomi : 45% d\'avancement — Livraison prévue fin 2025',src:'EDG Guinée',time:'il y a 9h',cat:'ÉNERGIE',sev:'info'},
+  {t:'Troubles à Labé : Tensions liées aux coupures eau et électricité persistantes',src:'Guinéenews',time:'il y a 11h',cat:'SOCIAL',sev:'medium'},
+  {t:'AngloGold Ashanti Siguiri : Production or +12% au T1 2025',src:'AngloGold IR',time:'il y a 13h',cat:'MINIER',sev:'info'},
+  {t:'Incendies de brousse en Guinée Forestière — mobilisation services forestiers DNEF',src:'DNEF',time:'il y a 15h',cat:'ENVIRON.',sev:'high'},
+  {t:'FMI : Mission d\'évaluation économique — rapport préliminaire positif (+5.6% PIB)',src:'FMI / BM',time:'il y a 16h',cat:'ÉCONOMIE',sev:'info'},
+  {t:'Sécurité frontière Guinée-Mali : Patrouilles conjointes renforcées — zone Siguiri',src:'FARG',time:'il y a 18h',cat:'SÉCURITÉ',sev:'medium'},
+  {t:'Choléra : Nouveaux cas confirmés quartiers périphériques Conakry',src:'Min. Santé GN',time:'hier',cat:'SANTÉ',sev:'high'},
+  {t:'Port Conakry : Lancement phase 2 extension terminal minéralier',src:'PAC',time:'hier',cat:'INFRA',sev:'info'},
+  {t:'Déforestation : Perte 18,000 ha forêt Guinée Forestière en 2024 (GFW)',src:'Global Forest Watch',time:'hier',cat:'ENVIRON.',sev:'medium'},
+  {t:'ZES Matakong : Nouvelles négociations avec investisseurs EAU et Chine',src:'APEX-Guinée',time:'hier',cat:'ÉCONOMIE',sev:'info'},
+  {t:'SOGUIPAH : Campagne hévéa 2025 — Production en hausse de 8%',src:'Ministère Agriculture',time:'il y a 2j',cat:'AGRI.',sev:'info'},
+  {t:'Accident route nationale RN1 : 8 morts entre Mamou et Labé',src:'AGUISER',time:'il y a 2j',cat:'SÉCURITÉ',sev:'high'},
+  {t:'Mont Nimba : Accord partiel UNESCO pour évaluation minière responsable',src:'UNESCO',time:'il y a 3j',cat:'MINIER',sev:'medium'},
+];
 
-// ── GUINEA BORDER ──
+const sevCls={critical:'sc',high:'sh',medium:'sm',low:'sl',info:'si'};
+document.getElementById('h-alerts').textContent = NEWS.filter(n=>['critical','high'].includes(n.sev)).length+' actives';
+
+document.getElementById('nfeed').innerHTML = NEWS.map(n=>`
+  <div class="ni">
+    <span class="ns ${sevCls[n.sev]||'si'}">${n.cat}</span>
+    <div class="nt">${n.t}</div>
+    <div class="nm"><span class="nsrc">${n.src}</span><span>${n.time}</span></div>
+  </div>`).join('');
+
+document.getElementById('afeed').innerHTML = `<div class="sec-title">ALERTES ACTIVES</div>`+
+  NEWS.filter(n=>['critical','high','medium'].includes(n.sev)).map(n=>`
+  <div class="ni" style="border-left:3px solid ${n.sev==='critical'?'var(--red)':n.sev==='high'?'var(--orange)':'var(--gold)'}">
+    <span class="ns ${sevCls[n.sev]}">${n.sev.toUpperCase()} — ${n.cat}</span>
+    <div class="nt">${n.t}</div>
+    <div class="nm"><span class="nsrc">${n.src}</span><span>${n.time}</span></div>
+  </div>`).join('');
+
+// ─── BORDER ─────────────────────────────────────────────────────────
 async function loadBorder(){
   try{
     const r=await fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson');
     const d=await r.json();
-    const gn=d.features.find(f=>f.properties.ISO_A2==='GN'||f.properties.ADMIN==='Guinea');
-    if(gn)L.geoJSON(gn,{style:{color:'#e8b84b',weight:1.8,fill:false,dashArray:'7,4',opacity:.55}}).addTo(map);
-  }catch(e){console.warn('Border load failed')}
+    const gn=d.features.find(f=>f.properties.ISO_A2==='GN');
+    if(gn)L.geoJSON(gn,{style:{color:'#e8b84b',weight:2,fill:false,dashArray:'8,5',opacity:.5}}).addTo(map);
+  }catch(e){console.warn('Border failed')}
 }
 
-// ── INIT ──
+// ─── INIT ───────────────────────────────────────────────────────────
+loadBorder();
 fetchWeather();
 fetchFX();
-buildNews();
-loadBorder();
+fetchWorldBank();
 
-setInterval(fetchWeather,10*60*1000);
-setInterval(fetchFX,5*60*1000);
+setInterval(fetchWeather, 10 * 60 * 1000);
+setInterval(fetchFX, 5 * 60 * 1000);
 </script>
 </body>
 </html>
