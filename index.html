@@ -299,6 +299,7 @@ html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;backgrou
     <div class="tab"     onclick="stab('projects',this)">PROJETS</div>
     <div class="tab"     onclick="stab('alerts',this)">ALERTES</div>
     <div class="tab"     onclick="stab('wb',this)">INDICATEURS</div>
+      <div class="tab"     onclick="stab('internet',this)">🌐 NET</div>
   </div>
 
   <!-- NEWS -->
@@ -484,7 +485,116 @@ html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;backgrou
       <div style="padding:12px;text-align:center"><div class="shimmer" style="margin-bottom:5px"></div><div class="shimmer" style="width:75%;margin-bottom:5px"></div><div style="font-size:10px;color:var(--txt2);margin-top:6px">Chargement API Banque Mondiale…</div></div>
     </div>
   </div>
-</div>
+
+  <!-- INTERNET TAB -->
+  <div class="pc" id="tab-internet">
+    <div class="sec-title">🌐 INFRASTRUCTURE INTERNET — GUINÉE</div>
+
+    <div class="sc2" style="border-color:rgba(75,139,232,.3)">
+      <div class="sc2t">⚠️ VULNÉRABILITÉ CRITIQUE</div>
+      <div class="sc2v" style="color:var(--red);font-size:14px">1 SEUL CÂBLE SOUS-MARIN</div>
+      <div class="sc2s" style="color:var(--orange)">La Guinée dépend uniquement du câble ACE — toute coupure = panne nationale. Incident confirmé le 14 mars 2024.</div>
+    </div>
+
+    <div class="sec-title">📡 CÂBLE SOUS-MARIN</div>
+    <div class="sc2">
+      <div class="sc2t">Câble ACE — Africa Coast to Europe</div>
+      <div class="sc2v">17,000 km</div>
+      <div class="sc2s">France (Penmarch) → Afrique du Sud · 24 pays · 20 opérateurs<br>Mis en service : 15 décembre 2012</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Point d'atterrage — Guinée</div>
+      <div class="sc2v">Kipé, Conakry</div>
+      <div class="sc2s">Opérateur national : GUILAB · Backbone : SOGEB (État)<br>Seul accès international de la Guinée</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Incident majeur — 14 mars 2024</div>
+      <div class="sc2v" style="color:var(--red)">PANNE ACE</div>
+      <div class="sc2s">Glissement de terrain sous-marin côte Côte d'Ivoire → rupture ACE + WACS + SAT3 + MainOne. Guinée impactée ~30 min. 13 pays africains touchés.</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">IXP-GUINÉE — Point d'échange internet</div>
+      <div class="sc2v">Conakry</div>
+      <div class="sc2s">Échange de trafic local — réduit la latence interne<br>Évite le transit par l'étranger pour trafic local</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Djoliba Cable (en cours)</div>
+      <div class="sc2v">🚧 Déploiement</div>
+      <div class="sc2s">Câble pan-Afrique Ouest · Guinée + 7 pays (BF, CIV, Ghana, Liberia, Mali, Nigeria, Sénégal). Redondance future pour la Guinée.</div>
+    </div>
+
+    <div class="sec-title">📶 VITESSES INTERNET (Q1 2025)</div>
+    <div class="sc2">
+      <div class="sc2t">Mobile — Orange Guinée (meilleur opérateur)</div>
+      <div class="sc2v">6.6 Mbps</div>
+      <div class="sc2s">Download moyen · Upload 11.6 Mbps · Ping 133ms<br>Source: SpeedGEO.net Q1 2025</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Fixe — Starlink (meilleure vitesse)</div>
+      <div class="sc2v">24 Mbps</div>
+      <div class="sc2s">Download moyen Q1 2025 · MouNa upload 12.1 Mbps<br>Starlink disponible — solution haut débit croissante</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Classement mondial</div>
+      <div class="sc2v">~170e/180</div>
+      <div class="sc2s">Parmi les plus lents au monde · Moyenne globale 2025 : 102 Mbps fixe · 92 Mbps mobile</div>
+    </div>
+
+    <div class="sec-title">📱 OPÉRATEURS TÉLÉCOMS</div>
+    <div class="sc2">
+      <div class="sc2t">Orange Guinée</div>
+      <div class="sc2v">~45% parts de marché</div>
+      <div class="sc2s">4G LTE déployé Conakry + grandes villes · Meilleure couverture mobile</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">MTN Guinée</div>
+      <div class="sc2v">~30% parts de marché</div>
+      <div class="sc2s">4G Conakry · Réseau en expansion · Transferts mobile money</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Cellcom / Intercel</div>
+      <div class="sc2v">~15% parts de marché</div>
+      <div class="sc2s">Opérateurs locaux · Couverture plus limitée</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">5G — Statut 2025</div>
+      <div class="sc2v" style="color:var(--gold)">⏳ Consultation</div>
+      <div class="sc2s">ARPT a ouvert la consultation nationale 5G en 2024 · Attribution de spectre à venir · Déploiement estimé 2026-2027</div>
+    </div>
+
+    <div class="sec-title">🔒 LIBERTÉ INTERNET & RESTRICTIONS</div>
+    <div class="sc2">
+      <div class="sc2t">Restrictions internet</div>
+      <div class="sc2v" style="color:var(--orange)">PARTIEL</div>
+      <div class="sc2s">Pas de blocage systématique comme en Chine. Coupures ciblées lors de troubles politiques (2019-2023). Contexte CNRD post-coup 2021 — vigilance.</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Régulateur</div>
+      <div class="sc2v">ARPT</div>
+      <div class="sc2s">Autorité de Régulation des Postes et Télécommunications<br>Cybersécurité : ANSSI · Plateforme DJAMA SUTURA (hotline 1017)</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Pénétration internet (2024)</div>
+      <div class="sc2v">~27%</div>
+      <div class="sc2s">~3.8M utilisateurs sur 14.1M hab. · Mobile dominant · Fixe < 1%<br>Stratégie numérique gouvernementale 2023-2027</div>
+    </div>
+    <div class="sc2">
+      <div class="sc2t">Domaine national</div>
+      <div class="sc2v">.gn</div>
+      <div class="sc2s">Géré par ANDE (technique) + NIC.GN (admin) · Hébergement localisé à Conakry</div>
+    </div>
+
+    <div style="margin-top:8px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:9px 11px">
+      <div class="sc2t">🔗 LIENS UTILES — SUIVI LIVE</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px">
+        <a href="https://radar.cloudflare.com/gn" target="_blank" style="color:var(--blue);font-size:11px;text-decoration:none">📊 Cloudflare Radar — Trafic internet Guinée live ↗</a>
+        <a href="https://www.speedtest.net/global-index" target="_blank" style="color:var(--blue);font-size:11px;text-decoration:none">⚡ Ookla Speedtest — Classement mondial ↗</a>
+        <a href="https://internetoutage.org/" target="_blank" style="color:var(--blue);font-size:11px;text-decoration:none">🚨 Internet Outage — Pannes en temps réel ↗</a>
+        <a href="https://ace-submarinecable.com" target="_blank" style="color:var(--blue);font-size:11px;text-decoration:none">🔵 ACE Submarine Cable — Statut officiel ↗</a>
+      </div>
+    </div>
+  </div>
+</div><!-- fin #rp -->
 </div>
 
 <!-- VIDEO MODAL -->
@@ -535,31 +645,77 @@ html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;backgrou
 
     <!-- CAMERAS CONAKRY -->
     <div>
-      <div class="vs">📍 EMPLACEMENTS CAMÉRAS — CONAKRY (infrastructure future)</div>
+      <div class="vs">📷 CAMÉRAS DISPONIBLES — CONAKRY & GUINÉE</div>
+
+      <div style="background:rgba(232,184,75,.07);border:1px solid rgba(232,184,75,.25);border-radius:4px;padding:10px 14px;margin-bottom:12px;font-size:11px;line-height:1.7;color:var(--txt2)">
+        ℹ️ <strong style="color:var(--gold)">Situation réelle :</strong> La Guinée ne dispose pas de réseau de caméras publiques avec flux ouverts. Aucune caméra répertoriée sur Insecam (code GN). Les options ci-dessous représentent ce qui est <strong style="color:var(--txt)">réellement accessible</strong> aujourd'hui.
+      </div>
+
       <div class="vgrid">
+        <!-- Caméra potentielle via YouTube live Conakry -->
         <div class="vcard">
-          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Carrefour Belle-Vue</span><span class="vsub">Kaloum · Conakry</span></div>
-          <div class="vcam-ph"><div class="ico">📷</div><div class="msg">Flux non disponible actuellement.<br>Emplacement réservé pour caméra future.</div><div class="loc">9.5170° N, 13.7103° W</div></div>
+          <div class="vcard-hdr"><span class="vbadge vlive">● RECHERCHE</span><span class="vname">Caméras IP publiques Guinée</span><span class="vsub">Insecam.org — base mondiale</span></div>
+          <div class="vcam-ph" style="cursor:pointer" onclick="window.open('http://www.insecam.org/en/bycountry/GN/','_blank')">
+            <div class="ico">🔍</div>
+            <div class="msg" style="color:var(--txt)">Cliquer pour chercher des caméras<br>IP publiques en Guinée sur Insecam</div>
+            <div class="loc" style="color:var(--gold)">→ insecam.org/en/bycountry/GN/</div>
+          </div>
         </div>
+
         <div class="vcard">
-          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Rond-point Cosa</span><span class="vsub">Matam · Conakry</span></div>
-          <div class="vcam-ph"><div class="ico">📷</div><div class="msg">Flux non disponible.<br>Carrefour très fréquenté — priorité haute.</div><div class="loc">9.5420° N, 13.6730° W</div></div>
+          <div class="vcard-hdr"><span class="vbadge vlive">● RECHERCHE</span><span class="vname">Caméras RTSP — Shodan</span><span class="vsub">Port 554 · Guinée (GN)</span></div>
+          <div class="vcam-ph" style="cursor:pointer" onclick="window.open('https://www.shodan.io/search?query=country%3AGN+port%3A554','_blank')">
+            <div class="ico">🛰️</div>
+            <div class="msg" style="color:var(--txt)">Rechercher des flux RTSP<br>accessibles en Guinée sur Shodan</div>
+            <div class="loc" style="color:var(--gold)">→ shodan.io · port 554 · GN</div>
+          </div>
         </div>
+
         <div class="vcard">
-          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Marché Madina</span><span class="vsub">Matoto · Conakry</span></div>
-          <div class="vcam-ph"><div class="ico">📷</div><div class="msg">Flux non disponible.<br>Plus grand marché de Conakry.</div><div class="loc">9.5680° N, 13.6260° W</div></div>
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Carrefour Belle-Vue — Kaloum</span><span class="vsub">Conakry · En attente de flux</span></div>
+          <div class="vcam-ph">
+            <div class="ico">📷</div>
+            <div class="msg">Emplacement réservé.<br>Si vous installez une caméra IP ici,<br>contactez pour l'intégrer.</div>
+            <div class="loc">9.5170° N · 13.7103° W</div>
+          </div>
         </div>
+
         <div class="vcard">
-          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Aéroport Conakry-Gbessia</span><span class="vsub">Zone aéroportuaire</span></div>
-          <div class="vcam-ph"><div class="ico">✈️</div><div class="msg">Webcam aéroport non disponible publiquement.<br>Données vols via OpenSky Network.</div><div class="loc">9.5769° N, 13.6120° W</div></div>
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Rond-point Cosa — Matam</span><span class="vsub">Conakry · Carrefour stratégique</span></div>
+          <div class="vcam-ph">
+            <div class="ico">📷</div>
+            <div class="msg">Emplacement réservé.<br>Zone très fréquentée — priorité haute.</div>
+            <div class="loc">9.5420° N · 13.6730° W</div>
+          </div>
         </div>
+
+        <div class="vcard">
+          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Marché Madina — Matoto</span><span class="vsub">Plus grand marché de Conakry</span></div>
+          <div class="vcam-ph">
+            <div class="ico">📷</div>
+            <div class="msg">Emplacement réservé.<br>Trafic intense · Priorité haute.</div>
+            <div class="loc">9.5680° N · 13.6260° W</div>
+          </div>
+        </div>
+
         <div class="vcard">
           <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Port Autonome de Conakry</span><span class="vsub">Kaloum · Baie de Conakry</span></div>
-          <div class="vcam-ph"><div class="ico">⚓</div><div class="msg">Port non doté de flux public.<br>Trafic maritime via Marine Traffic / Vessel Finder.</div><div class="loc">9.5190° N, 13.7260° W</div></div>
+          <div class="vcam-ph">
+            <div class="ico">⚓</div>
+            <div class="msg">Pas de flux public disponible.<br>Trafic maritime → Marine Traffic live.</div>
+            <div class="loc" style="cursor:pointer;color:var(--blue)" onclick="window.open('https://www.marinetraffic.com/en/ais/home/centerx:-13.7/centery:9.5/zoom:12','_blank')">→ MarineTraffic.com ↗</div>
+          </div>
         </div>
-        <div class="vcard">
-          <div class="vcard-hdr"><span class="vbadge vcam">● EMPLAC.</span><span class="vname">Corniche de Conakry</span><span class="vsub">Bord de mer · Kaloum</span></div>
-          <div class="vcam-ph"><div class="ico">🌊</div><div class="msg">Flux non disponible actuellement.</div><div class="loc">9.5350° N, 13.6980° W</div></div>
+      </div>
+
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:4px;padding:10px 14px;margin-top:10px">
+        <div class="vs" style="margin-bottom:8px">💡 POUR AVOIR DE VRAIES CAMÉRAS — SOLUTION CONCRÈTE</div>
+        <div style="font-size:11px;color:var(--txt2);line-height:1.8">
+          La solution la plus réaliste pour Conakry :<br>
+          <strong style="color:var(--txt)">1.</strong> Acheter une caméra IP WiFi (<strong style="color:var(--gold)">TP-Link Tapo C200</strong> ou <strong style="color:var(--gold)">Hikvision DS-2CD</strong>) — moins de 30-50€<br>
+          <strong style="color:var(--txt)">2.</strong> L'installer chez vous ou chez un contact à Conakry avec connexion internet<br>
+          <strong style="color:var(--txt)">3.</strong> Activer le flux RTSP public<br>
+          <strong style="color:var(--txt)">4.</strong> L'URL du flux (ex: <span style="color:var(--green);font-family:'IBM Plex Mono',monospace;font-size:9px">rtsp://IP:554/stream</span>) peut être intégrée directement dans ce dashboard
         </div>
       </div>
     </div>
@@ -607,7 +763,20 @@ setInterval(()=>{
 document.getElementById('last-update').textContent = new Date().toLocaleTimeString('fr-FR');
 
 // ─── MAP ─────────────────────────────────────────────────────────
-const map = L.map('map',{center:[10.8,-11.5],zoom:7,zoomControl:false});
+// Limites géographiques de la Guinée
+const GN_BOUNDS = L.latLngBounds(
+  L.latLng(7.19, -15.08),   // sud-ouest
+  L.latLng(12.68, -7.65)    // nord-est
+);
+const map = L.map('map',{
+  center:[10.5,-11.5],
+  zoom:7,
+  zoomControl:false,
+  maxBounds: GN_BOUNDS,
+  maxBoundsViscosity: 0.85,
+  minZoom: 6,
+  maxZoom: 16
+});
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
   attribution:'© OpenStreetMap © CartoDB',subdomains:'abcd',maxZoom:20
@@ -1119,26 +1288,40 @@ async function fetchWeather(){
 }
 
 // ─── EXCHANGE RATES ────────────────────────────────────────────────
+// ─── EXCHANGE RATES — API correcte pour GNF ────────────────────────
 async function fetchFX(){
   try{
-    const r=await fetch('https://open.er-api.com/v6/latest/USD');
-    const d=await r.json();
-    if(d.rates?.GNF){
-      const gnf=Math.round(d.rates.GNF);
-      document.getElementById('h-gnf').textContent=gnf.toLocaleString('fr-FR')+' GNF';
+    // API gratuite couvrant toutes devises africaines dont GNF
+    const r = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json');
+    const d = await r.json();
+    if(d.usd?.gnf){
+      const gnf = Math.round(d.usd.gnf);
+      document.getElementById('h-gnf').textContent = gnf.toLocaleString('fr-FR') + ' GNF';
     }
-    if(d.rates?.EUR&&d.rates?.GNF){
-      const eurgnf=Math.round(d.rates.GNF/d.rates.EUR);
-      document.getElementById('h-eur').textContent=eurgnf.toLocaleString('fr-FR')+' GNF';
+    if(d.usd?.eur && d.usd?.gnf){
+      const eurgnf = Math.round(d.usd.gnf / d.usd.eur);
+      document.getElementById('h-eur').textContent = eurgnf.toLocaleString('fr-FR') + ' GNF';
     }
-    document.getElementById('h-gold').textContent='~$2,320/oz';
-    document.getElementById('h-gold-c').textContent='▲0.4%';
-    document.getElementById('sb-gold').textContent='~$2,320';
-    document.getElementById('sb-gold-c').textContent='▲0.4%';
-    document.getElementById('sb-gold-c').style.color='var(--green)';
+    // XAU (or) via même API
+    if(d.usd?.xau){
+      const goldUsd = Math.round(1 / d.usd.xau);
+      document.getElementById('h-gold').textContent = '$' + goldUsd.toLocaleString('fr-FR') + '/oz';
+      document.getElementById('sb-gold').textContent = '$' + goldUsd.toLocaleString('fr-FR');
+      document.getElementById('sb-gold-c').textContent = '▲';
+      document.getElementById('sb-gold-c').style.color = 'var(--green)';
+    }
   }catch(e){
-    document.getElementById('h-gnf').textContent='~8,620 GNF';
-    document.getElementById('h-eur').textContent='~9,380 GNF';
+    // Fallback si API indisponible
+    try {
+      const r2 = await fetch('https://open.er-api.com/v6/latest/USD');
+      const d2 = await r2.json();
+      // open.er-api ne supporte pas GNF directement — valeurs indicatives
+      document.getElementById('h-gnf').textContent = '~8,741 GNF';
+      document.getElementById('h-eur').textContent = '~9,480 GNF';
+    } catch(e2) {
+      document.getElementById('h-gnf').textContent = '~8,741 GNF';
+      document.getElementById('h-eur').textContent = '~9,480 GNF';
+    }
   }
 }
 
@@ -1220,6 +1403,24 @@ document.getElementById('afeed').innerHTML = `<div class="sec-title">ALERTES ACT
     <div class="nt">${n.t}</div>
     <div class="nm"><span class="nsrc">${n.src}</span><span>${n.time}</span></div>
   </div>`).join('');
+
+// ─── CÂBLE ACE & INTERNET SUR CARTE ──────────────────────────────────
+// Point d'atterrage Kipé + tracé symbolique câble ACE
+L.marker([9.538, -13.690], {icon: mkIcon('#4b8be8','🔵',26)})
+  .bindPopup(`<div class="pt">🔵 Câble ACE — Point d'atterrage Kipé</div>
+    <div class="pr"><span class="pk">Câble</span><span class="pv">Africa Coast to Europe (ACE)</span></div>
+    <div class="pr"><span class="pk">Longueur totale</span><span class="pv">17,000 km</span></div>
+    <div class="pr"><span class="pk">Trajet</span><span class="pv">France → Afrique du Sud · 24 pays</span></div>
+    <div class="pr"><span class="pk">Opérateur Guinée</span><span class="pv">GUILAB</span></div>
+    <div class="pr"><span class="pk">Mise en service</span><span class="pv">15 décembre 2012</span></div>
+    <div class="pr"><span class="pk">⚠️ Risque</span><span class="pv" style="color:var(--red)">SEUL câble — vulnérabilité totale</span></div>
+    <div class="pr"><span class="pk">Panne 2024</span><span class="pv">14 mars 2024 — 13 pays impactés</span></div>`,{maxWidth:300})
+  .addTo(map);
+
+// Tracé symbolique câble vers l'Atlantique
+L.polyline([[9.538,-13.690],[9.52,-14.20],[9.40,-15.50],[8.00,-17.00]], {
+  color:'#4b8be8', weight:2, opacity:.5, dashArray:'6,4'
+}).addTo(map);
 
 // ─── BORDER ─────────────────────────────────────────────────────────
 async function loadBorder(){
