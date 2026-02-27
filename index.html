@@ -79,8 +79,8 @@ html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;backgrou
 .dst{color:var(--txt2)}
 .dsl{font-family:'IBM Plex Mono',monospace;font-size:8px}
 
-/* MAP */
-#mc{flex:1;position:relative;overflow:hidden}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:3px}
 #map{width:100%;height:100%}
 .leaflet-container{background:#060a10!important}
 
@@ -190,6 +190,25 @@ html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;backgrou
 .rmod-v{color:var(--txt);font-weight:500;text-align:right}
 .rmod-full{grid-column:1/-1}
 
+/* LEGEND */
+#legend{
+  position:absolute;bottom:40px;right:52px;z-index:500;
+  background:rgba(6,10,20,.93);border:1px solid var(--border2);
+  border-radius:4px;min-width:190px;backdrop-filter:blur(8px);
+  box-shadow:0 4px 20px rgba(0,0,0,.6);
+}
+#leg-toggle{
+  padding:7px 10px;font-family:'Saira Condensed',sans-serif;font-size:11px;
+  font-weight:600;letter-spacing:1.5px;color:var(--gold);cursor:pointer;
+  border-bottom:1px solid var(--border);display:flex;justify-content:space-between;
+}
+#leg-body{padding:6px 8px;display:block}
+.leg-section{font-family:'Saira Condensed',sans-serif;font-size:9px;font-weight:700;
+  letter-spacing:1.5px;color:var(--txt3);text-transform:uppercase;
+  padding:4px 0 3px;border-bottom:1px solid var(--border);margin-bottom:3px}
+.leg-row{display:flex;align-items:center;gap:7px;padding:2px 0;font-size:10px;color:var(--txt2)}
+.leg-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid;flex-shrink:0}
+.leg-line{height:3px;width:24px;flex-shrink:0;border-radius:1px;margin-right:0}
 /* SCROLLBAR */
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -289,6 +308,36 @@ html,body{height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;backgrou
 <div id="mc">
   <div id="map"></div>
   <div class="mow" id="mow"></div>
+
+  <!-- LÉGENDE FLOTTANTE -->
+  <div id="legend">
+    <div id="leg-toggle" onclick="document.getElementById('leg-body').style.display=document.getElementById('leg-body').style.display==='none'?'block':'none'">
+      📋 LÉGENDE <span style="font-size:9px;color:var(--txt3)">▼</span>
+    </div>
+    <div id="leg-body">
+      <div class="leg-section">ROUTES</div>
+      <div class="leg-row"><div class="leg-line" style="background:#f5c842"></div><span>Bitumé — bon état</span></div>
+      <div class="leg-row"><div class="leg-line" style="background:#e87b4b"></div><span>Mixte — bitume + piste</span></div>
+      <div class="leg-row"><div class="leg-line" style="background:#888;border-top:1px dashed #888;height:0"></div><span>Piste — dégradé</span></div>
+      <div class="leg-section">RESSOURCES</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ffd700;border-color:#ffd700"></div><span>Bauxite / Or</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#e87b4b;border-color:#e87b4b"></div><span>Minerai de fer</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#4be885;border-color:#4be885"></div><span>Barrage / Énergie</span></div>
+      <div class="leg-section">POINTS D'INTÉRÊT</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#e84b9b;border-color:#e84b9b;border-radius:3px"></div><span>Site touristique</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#80d44b;border-color:#80d44b"></div><span>Projet agricole</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#aaa;border-color:#aaa;border-radius:3px"></div><span>Site industriel</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#4be8c5;border-color:#4be8c5"></div><span>Port maritime</span></div>
+      <div class="leg-section">SURVEILLANCE</div>
+      <div class="leg-row"><div class="leg-dot" style="background:#e84b4b;border-color:#e84b4b"></div><span>Militaire</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#e87b4b;border-color:#e87b4b"></div><span>Incident sécurité</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#e84b9b;border-color:#e84b9b"></div><span>Santé / Épidémie</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#ff6b35;border-color:#ff6b35"></div><span>Feu NASA FIRMS</span></div>
+      <div class="leg-row"><div class="leg-dot" style="background:#9b4be8;border-color:#9b4be8;opacity:.5;width:20px;height:20px;border-radius:50%"></div><span>Population (taille = nb hab.)</span></div>
+      <div class="leg-row" style="margin-top:3px"><div style="width:24px;height:2px;border:1px dashed #e8b84b;margin-right:7px;flex-shrink:0"></div><span>Frontière Guinée</span></div>
+      <div class="leg-row"><div style="width:24px;height:2px;background:#4b8be8;margin-right:7px;flex-shrink:0;opacity:.6"></div><span>Câble sous-marin ACE</span></div>
+    </div>
+  </div>
 </div>
 
 <!-- RIGHT PANEL -->
@@ -763,24 +812,57 @@ setInterval(()=>{
 document.getElementById('last-update').textContent = new Date().toLocaleTimeString('fr-FR');
 
 // ─── MAP ─────────────────────────────────────────────────────────
-// Limites géographiques de la Guinée
-const GN_BOUNDS = L.latLngBounds(
-  L.latLng(7.19, -15.08),   // sud-ouest
-  L.latLng(12.68, -7.65)    // nord-est
-);
+const GN_BOUNDS = L.latLngBounds(L.latLng(7.0,-15.3), L.latLng(12.8,-7.5));
+
 const map = L.map('map',{
-  center:[10.5,-11.5],
-  zoom:7,
-  zoomControl:false,
-  maxBounds: GN_BOUNDS,
-  maxBoundsViscosity: 0.85,
-  minZoom: 6,
-  maxZoom: 16
+  center:[10.2,-11.5], zoom:7, zoomControl:false,
+  maxBounds: GN_BOUNDS, maxBoundsViscosity:1.0, minZoom:7, maxZoom:16
 });
 L.control.zoom({position:'bottomright'}).addTo(map);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{
-  attribution:'© OpenStreetMap © CartoDB',subdomains:'abcd',maxZoom:20
+  attribution:'© OSM © CartoDB', subdomains:'abcd', maxZoom:20
 }).addTo(map);
+
+// ── MASQUE OBSCURCISSANT TOUT CE QUI EST EN DEHORS DE LA GUINÉE ──
+// On charge le GeoJSON Guinée et on crée un masque "inversé"
+async function loadMask(){
+  try{
+    const r = await fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson');
+    const d = await r.json();
+    const gn = d.features.find(f=>f.properties.ISO_A2==='GN'||f.properties.ADMIN==='Guinea');
+    if(!gn) return;
+
+    // Contour Guinée en jaune-or bien visible
+    L.geoJSON(gn,{style:{
+      color:'#e8b84b', weight:2.5, fill:false, opacity:.9
+    }}).addTo(map);
+
+    // Masque : grand rectangle mondial + trou Guinée = zone noire autour
+    const worldCoords = [[-90,-180],[-90,180],[90,180],[90,-180],[-90,-180]];
+    const gnCoords = gn.geometry.type==='MultiPolygon'
+      ? gn.geometry.coordinates.map(p=>p[0].map(c=>[c[1],c[0]]))
+      : [gn.geometry.coordinates[0].map(c=>[c[1],c[0]])];
+
+    const maskPolygons = gnCoords.map(gnRing => ({
+      type:'Feature',
+      geometry:{type:'Polygon', coordinates:[
+        worldCoords.map(c=>[c[1],c[0]]),
+        gnRing.map(c=>[c[1],c[0]])
+      ]}
+    }));
+
+    maskPolygons.forEach(mp=>{
+      L.geoJSON(mp,{style:{
+        fillColor:'#040810', fillOpacity:.88,
+        color:'transparent', weight:0
+      }}).addTo(map);
+    });
+
+    // Zoom ajusté sur la Guinée
+    map.fitBounds(GN_BOUNDS, {padding:[10,10]});
+  }catch(e){ console.warn('Mask load failed',e); }
+}
+loadMask();
 
 function mkIcon(color,sym,sz=26){
   return L.divIcon({className:'',
@@ -812,24 +894,28 @@ function pp(d){
 
 // ─── DATA ─────────────────────────────────────────────────────────
 
-// ROUTES NATIONALES
+// ROUTES NATIONALES — rendu professionnel avec casing
 const ROUTES = [
-  {id:'RN1',color:'#e8b84b',weight:3,opacity:.75,name:'RN1 — Conakry → Mamou → Labé → Koundara',
-   coords:[[9.537,-13.677],[9.70,-13.37],[9.88,-13.12],[10.38,-11.99],[11.32,-12.29],[11.87,-13.28]]},
-  {id:'RN2',color:'#e87b4b',weight:3,opacity:.7,name:'RN2 — Conakry → Kindia → Mamou → Kankan',
-   coords:[[9.537,-13.677],[9.70,-13.37],[10.06,-12.87],[10.38,-11.99],[10.38,-9.306]]},
-  {id:'RN3',color:'#4b8be8',weight:2.5,opacity:.65,name:'RN3 — Conakry → Coyah → Dubréka',
-   coords:[[9.537,-13.677],[9.70,-13.37],[9.93,-13.57],[10.21,-13.52]]},
-  {id:'RN4',color:'#4be885',weight:3,opacity:.7,name:'RN4 — Mamou → Faranah → N\'Zérékoré',
-   coords:[[10.38,-11.99],[10.04,-10.75],[9.30,-10.20],[8.62,-9.45],[7.756,-8.816]]},
-  {id:'RN5',color:'#9b4be8',weight:2.5,opacity:.65,name:'RN5 — Kankan → Siguiri → frontière Mali',
-   coords:[[10.38,-9.306],[11.41,-9.17],[11.92,-9.02]]},
-  {id:'RN6',color:'#4be8c5',weight:2.5,opacity:.6,name:'RN6 — Conakry → Boké (côtière)',
-   coords:[[9.537,-13.677],[10.21,-13.52],[10.68,-14.48],[10.934,-14.298]]},
-  {id:'RN7',color:'#e84b9b',weight:2,opacity:.6,name:'RN7 — Kankan → Beyla → frontière CIV',
-   coords:[[10.38,-9.306],[9.05,-8.62],[8.68,-8.65]]},
-  {id:'RN8',color:'#ff6b35',weight:2,opacity:.6,name:'RN8 — Faranah → Kissidougou → Guékédou',
+  {id:'RN1', name:'RN1 — Conakry → Mamou → Labé → Koundara', etat:'bitume',
+   coords:[[9.537,-13.677],[9.70,-13.37],[9.88,-13.12],[10.06,-12.87],[10.38,-11.99],[10.78,-12.15],[11.07,-12.40],[11.32,-12.29],[11.87,-13.28]]},
+  {id:'RN2', name:'RN2 — Conakry → Kindia → Mamou → Kankan', etat:'bitume',
+   coords:[[9.537,-13.677],[9.70,-13.37],[10.06,-12.87],[10.38,-11.99],[10.85,-10.88],[10.38,-9.306]]},
+  {id:'RN3', name:'RN3 — Conakry → Coyah → Dubréka → Forecariah', etat:'bitume',
+   coords:[[9.537,-13.677],[9.70,-13.37],[9.93,-13.57],[10.21,-13.52],[9.43,-13.09]]},
+  {id:'RN4', name:'RN4 — Mamou → Faranah → Kissidougou → N\'Zérékoré', etat:'mixte',
+   coords:[[10.38,-11.99],[10.04,-10.75],[9.18,-10.10],[8.85,-9.78],[8.62,-9.45],[7.756,-8.816]]},
+  {id:'RN5', name:'RN5 — Kankan → Siguiri → frontière Mali', etat:'piste',
+   coords:[[10.38,-9.306],[11.00,-9.20],[11.41,-9.17],[11.68,-9.08],[11.92,-9.02]]},
+  {id:'RN6', name:'RN6 — Conakry → Boké (côte)', etat:'mixte',
+   coords:[[9.537,-13.677],[10.21,-13.52],[10.35,-13.55],[10.62,-13.80],[10.68,-14.28],[10.934,-14.298]]},
+  {id:'RN7', name:'RN7 — Kankan → Beyla → frontière CIV', etat:'piste',
+   coords:[[10.38,-9.306],[9.60,-9.00],[9.05,-8.62],[8.68,-8.65]]},
+  {id:'RN8', name:'RN8 — Faranah → Kissidougou → Guékédou', etat:'mixte',
    coords:[[10.04,-10.75],[9.18,-10.10],[8.55,-10.13]]},
+  {id:'RN9', name:'RN9 — Labé → Mali (ville) → Koundara', etat:'piste',
+   coords:[[11.32,-12.29],[11.68,-12.29],[12.08,-12.29],[12.49,-13.30]]},
+  {id:'RN10', name:'RN10 — N\'Zérékoré → Macenta → Guékédou', etat:'piste',
+   coords:[[7.756,-8.816],[8.55,-9.47],[8.55,-10.13]]},
 ];
 
 // PREFECTURES (cliquables)
@@ -1033,17 +1119,27 @@ LGS.regions=(()=>{
   return g;
 })();
 
-// ROUTES
+// ROUTES — rendu professionnel avec casing (bordure + remplissage)
 LGS.routes=(()=>{
   const g=L.layerGroup();
+  const ETAT_STYLE = {
+    bitume: {caseColor:'#c8960a', fillColor:'#f5c842', caseW:5, fillW:3},
+    mixte:  {caseColor:'#a05020', fillColor:'#e87b4b', caseW:4, fillW:2.5},
+    piste:  {caseColor:'#4a4a4a', fillColor:'#888888', caseW:3, fillW:2, dash:'8,5'},
+  };
   ROUTES.forEach(r=>{
-    L.polyline(r.coords,{color:r.color,weight:r.weight,opacity:r.opacity,dashArray: r.id.startsWith('RN7')||r.id.startsWith('RN8')?'10,5':null})
-      .bindPopup(`<div class="pt">🛣️ ${r.id}</div><div class="pr"><span class="pk">Itinéraire</span><span class="pv">${r.name.replace(r.id+' — ','')}</span></div>`,{maxWidth:280}).addTo(g);
-    // Route label at midpoint
-    const mid=r.coords[Math.floor(r.coords.length/2)];
+    const s = ETAT_STYLE[r.etat] || ETAT_STYLE.piste;
+    // Casing (bordure sombre dessous)
+    L.polyline(r.coords,{color:s.caseColor, weight:s.caseW, opacity:.9, lineJoin:'round', lineCap:'round'}).addTo(g);
+    // Route (couleur principale dessus)
+    L.polyline(r.coords,{color:s.fillColor, weight:s.fillW, opacity:1, dashArray:s.dash||null, lineJoin:'round', lineCap:'round'})
+      .bindPopup(`<div class="pt">🛣️ ${r.id}</div><div class="pr"><span class="pk">Tracé</span><span class="pv">${r.name.replace(r.id+' — ','')}</span></div><div class="pr"><span class="pk">État</span><span class="pv" style="color:${s.fillColor}">${r.etat==='bitume'?'✅ Bitumé (bon état)':r.etat==='mixte'?'⚠️ Mixte (bitume + piste)':'⚠️ Piste (dégradé)'}</span></div>`,{maxWidth:280})
+      .addTo(g);
+    // Étiquette au milieu de la route
+    const mid = r.coords[Math.floor(r.coords.length/2)];
     L.marker(mid,{icon:L.divIcon({className:'',
-      html:`<div style="background:${r.color}22;border:1px solid ${r.color}66;border-radius:2px;padding:1px 4px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:${r.color};white-space:nowrap;pointer-events:none">${r.id}</div>`,
-      iconSize:[36,14],iconAnchor:[18,7]}),interactive:false}).addTo(g);
+      html:`<div style="background:${s.fillColor};color:#000;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:700;padding:2px 5px;border-radius:2px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.6);pointer-events:none">${r.id}</div>`,
+      iconSize:[32,14],iconAnchor:[16,7]}),interactive:false}).addTo(g);
   });
   return g;
 })();
@@ -1160,15 +1256,37 @@ LGS.population=(()=>{
   return g;
 })();
 
-// PORT
+// PORTS (Conakry + Kamsar + Dapilon)
+const PORTS = [
+  {name:'Port Autonome de Conakry (PAC)',lat:9.519,lng:-13.726,
+   type:'Port commercial multi-usages',status:'✅ Opérationnel',
+   capacity:'2.5 Mt/an · Extension 5 Mt en cours',
+   main_exports:'Bauxite · Or · Diamants · Alumine',
+   main_imports:'Carburant · Céréales · Véhicules · Équipements',
+   operator:'PAC / Bolloré Terminal', note:'Principal port du pays · 80% du trafic national'},
+  {name:'Port minéralier de Kamsar (SBK)',lat:10.67,lng:-14.62,
+   type:'Port minéralier — Bauxite',status:'✅ Opérationnel',
+   capacity:'~35 Mt bauxite/an',
+   main_exports:'Bauxite brute (CBG/SMB-Winning/GAC)',
+   operator:'SBK · CBG · SMB-Winning',
+   note:'2ème plus grand port d\'exportation bauxite au monde · Inauguré 1973'},
+  {name:'Terminal Dapilon (SMB-Winning)',lat:10.72,lng:-14.58,
+   type:'Terminal minier privé',status:'✅ Opérationnel',
+   capacity:'~45 Mt/an (extension prévue)',
+   main_exports:'Bauxite brute — destination Chine',
+   operator:'SMB-Winning Consortium',
+   note:'Terminal le plus actif · Convoyeur direct mine → navire'},
+];
+
+// PORTS
 LGS.port=(()=>{
   const g=L.layerGroup();
-  L.marker([9.519,-13.726],{icon:mkIcon('#4be8c5','⚓',28)})
-    .bindPopup(`<div class="pt">Port Autonome de Conakry</div><div class="pr"><span class="pk">Capacité</span><span class="pv">2.5 Mt/an (→ 5 Mt prévus)</span></div><div class="pr"><span class="pk">Exports</span><span class="pv">Bauxite · Or · Diamants</span></div><div class="pr"><span class="pk">Imports</span><span class="pv">Carburant · Céréales · Équip.</span></div>`,{maxWidth:280}).addTo(g);
-  L.circle([9.519,-13.726],{radius:4000,color:'#4be8c5',fillColor:'#4be8c5',fillOpacity:.07,weight:1}).addTo(g);
+  PORTS.forEach(p=>{
+    L.marker([p.lat,p.lng],{icon:mkIcon('#4be8c5','⚓',30)}).bindPopup(pp(p),{maxWidth:300}).addTo(g);
+    L.circle([p.lat,p.lng],{radius:5000,color:'#4be8c5',fillColor:'#4be8c5',fillOpacity:.07,weight:1}).addTo(g);
+  });
   return g;
 })();
-
 // FLOODS
 LGS.floods=(()=>{
   const g=L.layerGroup();
@@ -1184,7 +1302,7 @@ LGS.cameras=(()=>{
   const g=L.layerGroup();
   CAMERAS.forEach(c=>{
     L.marker([c.lat,c.lng],{icon:mkSquare('#e84b4b','📷',22)})
-      .bindPopup(`<div class="pt">📷 ${c.name}</div><div class="pr"><span class="pk">Zone</span><span class="pv">${c.zone}</span></div><div class="pr"><span class="pk">Statut</span><span class="pv" style="color:var(--orange)">Emplacement réservé</span></div><div class="pr"><span class="pk">Flux</span><span class="pv">Non disponible</span></div>`,{maxWidth:250}).addTo(g);
+      .bindPopup(`<div class="pt">📷 ${c.name}</div><div class="pr"><span class="pk">Zone</span><span class="pv">${c.zone}</span></div><div class="pr"><span class="pk">Statut</span><span class="pv" style="color:var(--orange)">Emplacement réservé</span></div>`,{maxWidth:250}).addTo(g);
   });
   return g;
 })();
@@ -1405,7 +1523,6 @@ document.getElementById('afeed').innerHTML = `<div class="sec-title">ALERTES ACT
   </div>`).join('');
 
 // ─── CÂBLE ACE & INTERNET SUR CARTE ──────────────────────────────────
-// Point d'atterrage Kipé + tracé symbolique câble ACE
 L.marker([9.538, -13.690], {icon: mkIcon('#4b8be8','🔵',26)})
   .bindPopup(`<div class="pt">🔵 Câble ACE — Point d'atterrage Kipé</div>
     <div class="pr"><span class="pk">Câble</span><span class="pv">Africa Coast to Europe (ACE)</span></div>
@@ -1422,18 +1539,7 @@ L.polyline([[9.538,-13.690],[9.52,-14.20],[9.40,-15.50],[8.00,-17.00]], {
   color:'#4b8be8', weight:2, opacity:.5, dashArray:'6,4'
 }).addTo(map);
 
-// ─── BORDER ─────────────────────────────────────────────────────────
-async function loadBorder(){
-  try{
-    const r=await fetch('https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson');
-    const d=await r.json();
-    const gn=d.features.find(f=>f.properties.ISO_A2==='GN');
-    if(gn)L.geoJSON(gn,{style:{color:'#e8b84b',weight:2,fill:false,dashArray:'8,5',opacity:.5}}).addTo(map);
-  }catch(e){console.warn('Border failed')}
-}
-
 // ─── INIT ───────────────────────────────────────────────────────────
-loadBorder();
 fetchWeather();
 fetchFX();
 fetchWorldBank();
